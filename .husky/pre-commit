@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# Path: .husky/pre-push
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx pretty-quick --staged
+
+run_tests=`git diff --cached --name-only --diff-filter=ACM packages/core/ | wc -l | awk '{print $1}'`
+
+if [ "$run_tests" -gt "0" ] ; then
+  pnpm --filter core run test 
+fi

@@ -1,0 +1,40 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches: ["master"]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Hardhat Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            core:
+              - 'packages/core/**'
+
+      # TODO: extract to single setup step
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.5.0
+      - uses: actions/setup-node@v3
+        if: steps.filter.outputs.core == 'true'
+        with:
+          node-version: "18"
+          cache: "pnpm"
+      - if: steps.filter.outputs.core == 'true'
+        run: pnpm install
+
+      - if: steps.filter.outputs.core == 'true'
+        run: pnpm --filter core run test
