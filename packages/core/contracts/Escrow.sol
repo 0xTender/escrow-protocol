@@ -69,7 +69,7 @@ contract Escrow is Ownable {
      * @param escrowExtension address of the escrow extension
      * @param data data to be passed to the escrow extension
      */
-    function initEscrow(
+    function beginEscrow(
         IEscrowExtension escrowExtension,
         bytes calldata data
     ) public {
@@ -80,17 +80,18 @@ contract Escrow is Ownable {
         );
 
         _escrowIdTracker.increment();
-        _escrowStates[_escrowIdTracker.current()] = EscrowState.BEGUN;
-
+        uint256 escrowId = _escrowIdTracker.current();
+        _escrowStates[escrowId] = EscrowState.BEGUN;
+        _escrowExtensionFromId[escrowId] = escrowExtension;
         (bool success, string memory errorString) = escrowExtension.begin(
             _msgSender(),
-            _escrowIdTracker.current(),
+            escrowId,
             data
         );
         require(success, errorString);
         emit EscrowStateUpdate(
             _msgSender(),
-            _escrowIdTracker.current(),
+            escrowId,
             EscrowState.BEGUN,
             escrowExtension
         );

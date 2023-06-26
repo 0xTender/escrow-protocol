@@ -3,7 +3,6 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IEscrowExtension.sol";
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 abstract contract BaseEscrowExtension is Ownable, ERC165, IEscrowExtension {
@@ -22,7 +21,7 @@ abstract contract BaseEscrowExtension is Ownable, ERC165, IEscrowExtension {
 
     modifier onlyEscrow() {
         require(
-            _msgSender() == address(this),
+            msg.sender == escrowAddress,
             "EscrowExtension: Only escrow contract can call this function"
         );
         _;

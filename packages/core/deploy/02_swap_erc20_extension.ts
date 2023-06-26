@@ -5,7 +5,7 @@ const deploy_function: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   const { deployments, getNamedAccounts } = hre;
-  const { deploy } = deployments;
+  const { deploy, execute } = deployments;
 
   const { deployer } = await getNamedAccounts();
 
@@ -18,6 +18,16 @@ const deploy_function: DeployFunction = async function (
     skipIfAlreadyDeployed: true,
     args: [Escrow.address],
   });
+
+  const SwapERC20Extension = await deployments.get("SwapERC20Extension");
+
+  await execute(
+    "Escrow",
+    { from: deployer },
+    "updateEscrowExtension",
+    SwapERC20Extension.address,
+    true
+  );
 };
 
 export default deploy_function;
