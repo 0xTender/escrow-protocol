@@ -1,7 +1,22 @@
 [
   {
-    "name": "Hello",
-    "path": "./packages/core/deployments/localhost/Hello.json",
+    "name": "Escrow",
+    "path": "./packages/core/deployments/localhost/Escrow.json",
+    "rpc": "http://127.0.0.1:8545/"
+  },
+  {
+    "name": "SwapERC20Extension",
+    "path": "./packages/core/deployments/localhost/SwapERC20Extension.json",
+    "rpc": "http://127.0.0.1:8545/"
+  },
+  {
+    "name": "Tether",
+    "path": "./packages/core/deployments/localhost/Tether.json",
+    "rpc": "http://127.0.0.1:8545/"
+  },
+  {
+    "name": "WrappedEther",
+    "path": "./packages/core/deployments/localhost/WrappedEther.json",
     "rpc": "http://127.0.0.1:8545/"
   }
 ]

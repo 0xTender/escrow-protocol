@@ -52,6 +52,11 @@ contract SwapERC20Extension is BaseEscrowExtension {
             "SwapERC20Extension: sender must be initiatorToken"
         );
 
+        require(
+            swapStruct.deadline > block.timestamp,
+            "SwapERC20Extension: deadline must be in future"
+        );
+
         IERC20(swapStruct.initiatorToken).safeTransferFrom(
             sender,
             address(this),

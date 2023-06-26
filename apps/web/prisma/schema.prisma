@@ -41,28 +41,147 @@ model Event_pm {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  E_MessageEvent_Hello E_MessageEvent_Hello[]
+  E_EscrowExtensionUpdated_Escrow E_EscrowExtensionUpdated_Escrow[]
 
-  E_StructEvent_Hello E_StructEvent_Hello[]
+  E_EscrowStateUpdate_Escrow E_EscrowStateUpdate_Escrow[]
+
+  E_OwnershipTransferred_Escrow E_OwnershipTransferred_Escrow[]
+
+  E_EscrowAddressUpdated_SwapERC20Extension E_EscrowAddressUpdated_SwapERC20Extension[]
+
+  E_OwnershipTransferred_SwapERC20Extension E_OwnershipTransferred_SwapERC20Extension[]
+
+  E_Approval_Tether E_Approval_Tether[]
+
+  E_Transfer_Tether E_Transfer_Tether[]
+
+  E_Approval_WrappedEther E_Approval_WrappedEther[]
+
+  E_Transfer_WrappedEther E_Transfer_WrappedEther[]
 }
 
-model E_MessageEvent_Hello {
+model E_EscrowExtensionUpdated_Escrow {
   id       Int      @id @default(autoincrement())
   Event_pm Event_pm @relation(fields: [eventId], references: [id])
   eventId  String   @unique
 
-  A_message String @db.VarChar(1000)
+  A_escrowExtension String @db.VarChar(1000)
+
+  A_enabled String @db.VarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model E_StructEvent_Hello {
+model E_EscrowStateUpdate_Escrow {
   id       Int      @id @default(autoincrement())
   Event_pm Event_pm @relation(fields: [eventId], references: [id])
   eventId  String   @unique
 
-  A_eventStruct String @db.VarChar(1000)
+  A_sender String @db.VarChar(1000)
+
+  A_escrowId String @db.VarChar(1000)
+
+  A_escrowState String @db.VarChar(1000)
+
+  A_escrowExtension String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_OwnershipTransferred_Escrow {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_previousOwner String @db.VarChar(1000)
+
+  A_newOwner String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_EscrowAddressUpdated_SwapERC20Extension {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_escrowAddress String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_OwnershipTransferred_SwapERC20Extension {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_previousOwner String @db.VarChar(1000)
+
+  A_newOwner String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Approval_Tether {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_owner String @db.VarChar(1000)
+
+  A_spender String @db.VarChar(1000)
+
+  A_value String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Transfer_Tether {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_from String @db.VarChar(1000)
+
+  A_to String @db.VarChar(1000)
+
+  A_value String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Approval_WrappedEther {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_owner String @db.VarChar(1000)
+
+  A_spender String @db.VarChar(1000)
+
+  A_value String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Transfer_WrappedEther {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_from String @db.VarChar(1000)
+
+  A_to String @db.VarChar(1000)
+
+  A_value String @db.VarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

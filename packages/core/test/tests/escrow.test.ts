@@ -222,10 +222,10 @@ describe("Escrow Test", () => {
         ]
       );
 
-      await time.increase(60 * 60 * 24 * 7);
-
       await WrappedEther.approve(SwapERC20Extension.address, initiatorAmount);
       await Escrow.beginEscrow(SwapERC20Extension.address, data);
+
+      await time.increase(60 * 60 * 24 * 7);
 
       const cancelData = ethers.utils.defaultAbiCoder.encode(["uint256"], [1]);
 
