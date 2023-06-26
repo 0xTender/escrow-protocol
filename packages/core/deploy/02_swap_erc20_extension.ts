@@ -9,14 +9,23 @@ const deploy_function: DeployFunction = async function (
 
   const { deployer } = await getNamedAccounts();
 
-  await deploy("Escrow", {
-    contract: "Escrow",
+  const Escrow = await deployments.get("Escrow");
+
+  await deploy("SwapERC20Extension", {
+    contract: "SwapERC20Extension",
     from: deployer,
     log: true,
     skipIfAlreadyDeployed: true,
+    args: [Escrow.address],
   });
 };
 
 export default deploy_function;
 
-deploy_function.tags = ["Escrow"];
+deploy_function.tags = [
+  "SwapERC20Extension",
+  "production",
+  "development",
+  "testing",
+];
+deploy_function.dependencies = ["Escrow"];

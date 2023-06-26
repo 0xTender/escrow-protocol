@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IEscrowExtension.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 contract Escrow is Ownable {
     using Counters for Counters.Counter;
@@ -48,9 +49,19 @@ contract Escrow is Ownable {
             address(escrowExtension) != address(0),
             "Escrow: Escrow extension cannot be zero address"
         );
+        require(
+            address(escrowExtension) != address(this),
+            "Escrow: Escrow extension cannot be same address as escrow"
+        );
+        require(
+            IERC165(address(escrowExtension)).supportsInterface(
+                type(IEscrowExtension).interfaceId
+            ),
+            "Escrow: Escrow extension does not support IEscrowExtension interface"
+        );
 
         escrowExtensions[escrowExtension] = enabled;
-        emit ExcrowExtensionUpdated(escrowExtension, enabled);
+        emit EscrowExtensionUpdated(escrowExtension, enabled);
     }
 
     /**
@@ -146,7 +157,7 @@ contract Escrow is Ownable {
         );
     }
 
-    event ExcrowExtensionUpdated(
+    event EscrowExtensionUpdated(
         IEscrowExtension indexed escrowExtension,
         bool indexed enabled
     );
