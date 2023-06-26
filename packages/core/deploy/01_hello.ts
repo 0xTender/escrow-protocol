@@ -9,15 +9,14 @@ const deploy_function: DeployFunction = async function (
 
   const { deployer } = await getNamedAccounts();
 
-  await deploy("Hello", {
-    contract: "Hello",
+  await deploy("Escrow", {
+    contract: "Escrow",
     from: deployer,
     log: true,
-    args: ["\nHello, Hardhat!"],
     skipIfAlreadyDeployed: true,
   });
 };
 
 export default deploy_function;
 
-deploy_function.tags = ["Hello"];
+deploy_function.tags = ["Escrow"];

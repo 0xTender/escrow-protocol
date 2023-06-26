@@ -22,6 +22,21 @@ contract Escrow is Ownable {
 
     /**
      *
+     * @param escrowId id of the escrow
+     * @return state of the escrow
+     * @return address of the escrow extension
+     */
+    function escrowState(
+        uint256 escrowId
+    ) public view returns (EscrowState, address) {
+        return (
+            _escrowStates[escrowId],
+            address(_escrowExtensionFromId[escrowId])
+        );
+    }
+
+    /**
+     *
      * @param escrowExtension address of the escrow extension
      * @param enabled if the extension is enabled or not
      */
@@ -29,6 +44,11 @@ contract Escrow is Ownable {
         IEscrowExtension escrowExtension,
         bool enabled
     ) external onlyOwner {
+        require(
+            address(escrowExtension) != address(0),
+            "Escrow: Escrow extension cannot be zero address"
+        );
+
         escrowExtensions[escrowExtension] = enabled;
         emit ExcrowExtensionUpdated(escrowExtension, enabled);
     }

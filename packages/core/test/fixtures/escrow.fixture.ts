@@ -1,15 +1,15 @@
 import { deployments, getNamedAccounts, getUnnamedAccounts } from "hardhat";
-import { Hello } from "../../typechain-types";
+import type { Escrow } from "../../typechain-types";
 import { setupUser, setupUsers } from "./utils";
 
-export const hello_fixture = deployments.createFixture(async (hre) => {
-  await hre.deployments.fixture(["Hello"]);
+export const escrow_fixture = deployments.createFixture(async (hre) => {
+  await hre.deployments.fixture(["Escrow"]);
   const { deployer } = await getNamedAccounts();
-  const Hello = await hre.ethers.getContract<Hello>("Hello");
+  const Escrow = await hre.ethers.getContract<Escrow>("Escrow");
 
   const users = await getUnnamedAccounts();
 
-  const contracts = { Hello };
+  const contracts = { Escrow };
 
   return {
     ...contracts,
