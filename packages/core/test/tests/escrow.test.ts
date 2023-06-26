@@ -240,5 +240,90 @@ describe("Escrow Test", () => {
         .to.emit(WrappedEther, "Transfer")
         .withArgs(SwapERC20Extension.address, alice.address, initiatorAmount);
     });
+
+    it("counter can cancel before deadline", async () => {
+      const { WrappedEther, Tether, Escrow, SwapERC20Extension } = alice;
+      const now = await time.latest();
+      const data = ethers.utils.defaultAbiCoder.encode(
+        [
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "address",
+          "uint256",
+          "uint256",
+        ],
+        [
+          alice.address,
+          bob.address,
+          WrappedEther.address,
+          initiatorAmount,
+          Tether.address,
+          counterAmount,
+          now + 60 * 60 * 24 * 7,
+        ]
+      );
+
+      await WrappedEther.approve(SwapERC20Extension.address, initiatorAmount);
+      await Escrow.beginEscrow(SwapERC20Extension.address, data);
+
+      const cancelData = ethers.utils.defaultAbiCoder.encode(["uint256"], [1]);
+
+      await expect(bob.Escrow.cancelEscrow(1, cancelData))
+        .to.emit(Escrow, "EscrowStateUpdate")
+        .withArgs(
+          bob.address,
+          1,
+          EscrowState.CANCELLED,
+          SwapERC20Extension.address
+        )
+        .to.emit(WrappedEther, "Transfer")
+        .withArgs(SwapERC20Extension.address, alice.address, initiatorAmount);
+    });
+
+    it("counter cannot cancel twice", async () => {
+      const { WrappedEther, Tether, Escrow, SwapERC20Extension } = alice;
+      const now = await time.latest();
+      const data = ethers.utils.defaultAbiCoder.encode(
+        [
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "address",
+          "uint256",
+          "uint256",
+        ],
+        [
+          alice.address,
+          bob.address,
+          WrappedEther.address,
+          initiatorAmount,
+          Tether.address,
+          counterAmount,
+          now + 60 * 60 * 24 * 7,
+        ]
+      );
+
+      await WrappedEther.approve(SwapERC20Extension.address, initiatorAmount);
+      await Escrow.beginEscrow(SwapERC20Extension.address, data);
+
+      const cancelData = ethers.utils.defaultAbiCoder.encode(["uint256"], [1]);
+
+      await bob.Escrow.cancelEscrow(1, cancelData);
+      await expect(bob.Escrow.cancelEscrow(1, cancelData)).to.be.revertedWith(
+        "Escrow: Escrow not in BEGUN state"
+      );
+      expect((await Escrow.escrowState(1))[0]).to.eq(EscrowState.CANCELLED);
+    });
+
+    it("cannot cancel if not exists", async () => {
+      const cancelData = ethers.utils.defaultAbiCoder.encode(["uint256"], [1]);
+
+      await expect(bob.Escrow.cancelEscrow(1, cancelData)).to.be.revertedWith(
+        "Escrow: Escrow not in BEGUN state"
+      );
+    });
   });
 });
