@@ -10,7 +10,7 @@ import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { localhost } from "viem/chains";
-import { shortenAddress } from "@app/utils/web3";
+import { Button } from "./ui/button";
 
 const chains = [localhost];
 
@@ -51,7 +51,7 @@ export const WagmiWrapper: FC<{
 
   return (
     <>
-      <main className="min-h-screen px-12 py-6">
+      <main className="min-h-screen px-6 py-6 md:px-12">
         {hydrated && (
           <>
             <div className="mb-10 flex items-center justify-between">
@@ -59,9 +59,8 @@ export const WagmiWrapper: FC<{
               <div className="flex gap-4">
                 {/*  */}
                 <WagmiConfig config={wagmiConfig}>
-                  {address && <div>{shortenAddress(address)}</div>}
                   <div>
-                    <button
+                    <Button
                       onClick={() => {
                         open().catch(console.error);
                       }}
@@ -70,12 +69,12 @@ export const WagmiWrapper: FC<{
                       {address === undefined
                         ? "Connect Wallet"
                         : "Disconnect Wallet"}
-                    </button>
+                    </Button>
                   </div>
                 </WagmiConfig>
               </div>
             </div>
-            <>{address && <>Connected</>}</>
+            <>{address && <></>}</>
           </>
         )}
       </main>
