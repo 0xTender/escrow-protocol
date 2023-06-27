@@ -3,10 +3,19 @@ import Head from "next/head";
 
 // import { api } from "@app/utils/api";
 import { WagmiWrapper } from "@app/components/WagmiWrapper";
+import { useState } from "react";
 
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const toggle = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
   return (
     <>
       <Head>
@@ -14,8 +23,9 @@ const Home: NextPage = () => {
         <meta name="description" content="Escrow Protocol - 0xTender" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <WagmiWrapper></WagmiWrapper>
+      <div className="dark bg-background text-foreground">
+        <WagmiWrapper {...{ toggle, theme }}></WagmiWrapper>
+      </div>
     </>
   );
 };

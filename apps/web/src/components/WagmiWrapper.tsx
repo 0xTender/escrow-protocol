@@ -5,7 +5,7 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal, useWeb3Modal } from "@web3modal/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
@@ -38,7 +38,10 @@ const wagmiConfig = createConfig({
 
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
-export function WagmiWrapper() {
+export const WagmiWrapper: FC<{
+  toggle: () => void;
+  theme: "dark" | "light";
+}> = () => {
   const { address } = useAccount();
   const { open } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
@@ -79,4 +82,4 @@ export function WagmiWrapper() {
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </>
   );
-}
+};
