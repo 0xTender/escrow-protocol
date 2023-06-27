@@ -9,10 +9,10 @@ import { useState, useEffect } from "react";
 import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
-import { bsc, bscTestnet } from "viem/chains";
+import { localhost } from "viem/chains";
 import { shortenAddress } from "@app/utils/web3";
 
-const chains = [bsc, bscTestnet];
+const chains = [localhost];
 
 const projectId = "a3b72b0c49a06b52469c2ea63d289f26";
 
@@ -54,10 +54,16 @@ export function WagmiWrapper() {
             <div className="mb-10 flex items-center justify-between">
               <div className="flex font-bold">Escrow Protocol</div>
               <div className="flex gap-4">
+                {/*  */}
                 <WagmiConfig config={wagmiConfig}>
                   {address && <div>{shortenAddress(address)}</div>}
                   <div>
-                    <button onClick={open} className="m-auto">
+                    <button
+                      onClick={() => {
+                        open().catch(console.error);
+                      }}
+                      className="m-auto"
+                    >
                       {address === undefined
                         ? "Connect Wallet"
                         : "Disconnect Wallet"}
