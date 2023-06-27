@@ -12,6 +12,13 @@ contract SwapERC20Extension is BaseEscrowExtension {
 
     constructor(address _escrowAddress) BaseEscrowExtension(_escrowAddress) {}
 
+    enum EscrowState {
+        NONE,
+        BEGUN,
+        COMPLETED,
+        CANCELLED
+    }
+
     struct SwapStruct {
         address initiator;
         address counter;
@@ -64,6 +71,18 @@ contract SwapERC20Extension is BaseEscrowExtension {
         );
 
         swapStructs[escrowId] = swapStruct;
+
+        emit SwapStateChanged(
+            escrowId,
+            swapStruct.initiator,
+            swapStruct.counter,
+            swapStruct.initiatorToken,
+            swapStruct.initiatorAmount,
+            swapStruct.counterToken,
+            swapStruct.counterAmount,
+            swapStruct.deadline,
+            EscrowState.BEGUN
+        );
         return (true, "");
     }
 
@@ -99,6 +118,19 @@ contract SwapERC20Extension is BaseEscrowExtension {
             swapStruct.initiator,
             swapStruct.initiatorAmount
         );
+
+        emit SwapStateChanged(
+            escrowId,
+            swapStruct.initiator,
+            swapStruct.counter,
+            swapStruct.initiatorToken,
+            swapStruct.initiatorAmount,
+            swapStruct.counterToken,
+            swapStruct.counterAmount,
+            swapStruct.deadline,
+            EscrowState.CANCELLED
+        );
+
         return (true, "");
     }
 
@@ -134,6 +166,30 @@ contract SwapERC20Extension is BaseEscrowExtension {
             swapStruct.counterAmount
         );
 
+        emit SwapStateChanged(
+            escrowId,
+            swapStruct.initiator,
+            swapStruct.counter,
+            swapStruct.initiatorToken,
+            swapStruct.initiatorAmount,
+            swapStruct.counterToken,
+            swapStruct.counterAmount,
+            swapStruct.deadline,
+            EscrowState.COMPLETED
+        );
+
         return (true, "");
     }
+
+    event SwapStateChanged(
+        uint256 indexed escrowId,
+        address initiator,
+        address counter,
+        address initiatorToken,
+        uint256 initiatorAmount,
+        address counterToken,
+        uint256 counterAmount,
+        uint256 deadline,
+        EscrowState state
+    );
 }
