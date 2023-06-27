@@ -8,7 +8,7 @@ import { useState } from "react";
 const Home: NextPage = () => {
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const toggle = () => {
     if (theme === "dark") {
       setTheme("light");
@@ -21,9 +21,9 @@ const Home: NextPage = () => {
       <Head>
         <title>Escrow Protocol - 0xTender</title>
         <meta name="description" content="Escrow Protocol - 0xTender" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" />
       </Head>
-      <div className="dark bg-background text-foreground">
+      <div className="bg-background text-foreground">
         <WagmiWrapper {...{ toggle, theme }}></WagmiWrapper>
       </div>
     </>

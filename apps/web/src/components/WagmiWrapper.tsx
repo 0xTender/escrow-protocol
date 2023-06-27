@@ -11,6 +11,8 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { localhost } from "viem/chains";
 import { Button } from "./ui/button";
+import Image from "next/image";
+import { cn } from "@app/utils";
 
 const chains = [localhost];
 
@@ -41,8 +43,8 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 export const WagmiWrapper: FC<{
   toggle: () => void;
   theme: "dark" | "light";
-}> = () => {
-  const { address } = useAccount();
+}> = ({ theme }) => {
+  const { address, isConnected } = useAccount();
   const { open } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
@@ -51,34 +53,48 @@ export const WagmiWrapper: FC<{
 
   return (
     <>
-      <main className="min-h-screen px-6 py-6 md:px-12">
+      <main
+        className={cn(
+          "min-h-screen px-6 py-6 md:px-12",
+          theme === "dark" ? "dark" : ""
+        )}
+      >
         {hydrated && (
           <>
-            <div className="mb-10 flex items-center justify-between">
-              <div className="flex font-bold">Escrow Protocol</div>
-              <div className="flex gap-4">
-                {/*  */}
+            <div className={"mb-10 flex items-center justify-between"}>
+              <div>
+                <div className="font-bold">0xTender</div>
+                <div className="font-mono text-sm">Escrow</div>
+              </div>
+              <div className="gap-4">
                 <WagmiConfig config={wagmiConfig}>
                   <div>
                     <Button
+                      className="rounded-none"
                       onClick={() => {
                         open().catch(console.error);
                       }}
-                      className="m-auto"
                     >
-                      {address === undefined
-                        ? "Connect Wallet"
-                        : "Disconnect Wallet"}
+                      {address === undefined ? (
+                        "Connect Wallet"
+                      ) : (
+                        <>Disconnect Wallet</>
+                      )}
                     </Button>
                   </div>
                 </WagmiConfig>
               </div>
             </div>
-            <>{address && <></>}</>
+
+            <>{address && isConnected && <></>}</>
           </>
         )}
       </main>
-      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+      <Web3Modal
+        themeMode={"dark"}
+        projectId={projectId}
+        ethereumClient={ethereumClient}
+      />
     </>
   );
 };
