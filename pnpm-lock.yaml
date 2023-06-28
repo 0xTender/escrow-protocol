@@ -52,9 +52,15 @@ importers:
       "@0xtender/heisenberg-cli":
         specifier: 0.2.11
         version: 0.2.11(@0xtender/events-schema-generator@0.2.11)(@0xtender/evm-helpers@0.2.11)(@prisma/client@4.14.0)(ethers@5.7.2)
+      "@hookform/resolvers":
+        specifier: ^3.1.1
+        version: 3.1.1(react-hook-form@7.45.0)
       "@prisma/client":
         specifier: ^4.14.0
         version: 4.14.0(prisma@4.11.0)
+      "@radix-ui/react-label":
+        specifier: ^2.0.2
+        version: 2.0.2(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       "@radix-ui/react-slot":
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.5)(react@18.2.0)
@@ -106,6 +112,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.45.0
+        version: 7.45.0(react@18.2.0)
       superjson:
         specifier: 1.12.2
         version: 1.12.2
@@ -1303,6 +1312,17 @@ packages:
       "@ethersproject/properties": 5.7.0
       "@ethersproject/strings": 5.7.0
 
+  /@hookform/resolvers@3.1.1(react-hook-form@7.45.0):
+    resolution:
+      {
+        integrity: sha512-tS16bAUkqjITNSvbJuO1x7MXbn7Oe8ZziDTJdA9mMvsoYthnOOiznOTGBYwbdlYBgU+tgpI/BtTU3paRbCuSlg==,
+      }
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.45.0(react@18.2.0)
+    dev: false
+
   /@humanwhocodes/config-array@0.11.8:
     resolution:
       {
@@ -2307,6 +2327,54 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@radix-ui/react-label@2.0.2(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-N5ehvlM7qoTLx7nWPodsPYPgMzA5WM8zZChQg8nyFJKnDO5WHdba1vv5/H6IO5LtJMfD2Q3wh1qHFGNtK0w3bQ==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.21.5
+      "@radix-ui/react-primitive": 1.0.3(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      "@types/react": 18.2.5
+      "@types/react-dom": 18.2.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@radix-ui/react-primitive@1.0.3(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-yi58uVyoAcK/Nq1inRY56ZSjKypBNKTa/1mcL8qdl6oJeEaDbOldlzrGn7P6Q3Id5d+SYNGc5AJgc4vGhjs5+g==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.21.5
+      "@radix-ui/react-slot": 1.0.2(@types/react@18.2.5)(react@18.2.0)
+      "@types/react": 18.2.5
+      "@types/react-dom": 18.2.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-slot@1.0.2(@types/react@18.2.5)(react@18.2.0):
     resolution:
       {
@@ -3283,7 +3351,6 @@ packages:
       }
     dependencies:
       "@types/react": 18.2.5
-    dev: true
 
   /@types/react@18.2.5:
     resolution:
@@ -12661,6 +12728,18 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form@7.45.0(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-AbHeZ4ad+0dEIknSW9dBgIwcvRDfZ1O97sgj75WaMdOX0eg8TBiUf9wxzVkIjZbk76BBIE9lmFOzyD4PN80ZQg==,
+      }
+    engines: { node: ">=12.22.0" }
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:
