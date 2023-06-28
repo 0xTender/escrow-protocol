@@ -9,7 +9,6 @@ import { ThemeContext } from "@app/hooks/useTheme";
 import { Create } from "@app/components/Create";
 
 const HomePage: NextPage = () => {
-  const { theme } = useContext(ThemeContext);
   return (
     <>
       <Head>
@@ -17,7 +16,7 @@ const HomePage: NextPage = () => {
         <meta name="description" content="Escrow Protocol - 0xTender" />
         <link rel="icon" href="/logo.png" />
       </Head>
-      <div className={cn("bg-background text-foreground", theme)}></div>
+      <div className={cn("bg-background text-foreground")}></div>
     </>
   );
 };

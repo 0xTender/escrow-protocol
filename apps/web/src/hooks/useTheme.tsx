@@ -3,12 +3,12 @@
 import { Dispatch, SetStateAction, createContext } from "react";
 
 export type ThemeContextType = {
-  theme: "dark" | "light" | "front";
-  setTheme: Dispatch<SetStateAction<"dark" | "light" | "front">>;
+  theme: "dark" | "light";
+  setTheme: Dispatch<SetStateAction<"dark" | "light">>;
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: "light",
+  theme: "dark",
   setTheme: () => {},
 });
 

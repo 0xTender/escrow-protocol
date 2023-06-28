@@ -5,11 +5,31 @@ import { api } from "@app/utils/api";
 import "@app/styles/globals.css";
 import { FCC } from "@app/utils";
 import { ThemeProvider } from "@app/hooks/useTheme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WagmiWrapper } from "@app/components/WagmiWrapper";
 
 const ThemeContextWrapper: FCC = ({ children }) => {
-  const [theme, setTheme] = useState<"dark" | "light" | "front">("light");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
+
+  useEffect(() => {
+    if (theme === "dark") {
+      localStorage.setItem("theme", "dark");
+      document.body.classList.add("dark");
+    } else {
+      localStorage.setItem("theme", "light");
+      document.body.classList.remove("dark");
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    if (!localStorage) {
+      return;
+    }
+    const localTheme = localStorage.getItem("theme");
+    if (localTheme === "dark" || localTheme === "light") {
+      setTheme(localTheme);
+    }
+  }, []);
 
   return (
     <>

@@ -5,14 +5,9 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal, useWeb3Modal } from "@web3modal/react";
-import {
-  useState,
-  useEffect,
-  FC,
-  Dispatch,
-  SetStateAction,
-  useContext,
-} from "react";
+import { useState, useEffect, useContext } from "react";
+
+import { Moon, Sun } from "lucide-react";
 import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
@@ -49,8 +44,7 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 export const WagmiWrapper: FCC = ({ children }) => {
-  const { theme } = useContext(ThemeContext);
-
+  const { theme, setTheme } = useContext(ThemeContext);
   const { address } = useAccount();
   const { open } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
@@ -60,12 +54,7 @@ export const WagmiWrapper: FCC = ({ children }) => {
 
   return (
     <>
-      <main
-        className={cn(
-          "min-h-screen px-6 py-6 md:px-12",
-          theme === "dark" ? "dark" : ""
-        )}
-      >
+      <main className={cn("min-h-screen px-6 py-6 md:px-12")}>
         {hydrated && (
           <>
             <div className={"mb-10 flex items-center justify-between"}>
@@ -74,7 +63,7 @@ export const WagmiWrapper: FCC = ({ children }) => {
                 <div className="font-mono text-sm">Escrow</div>
               </div>
               <div className="gap-4">
-                <div>
+                <div className="flex items-center space-x-2">
                   <Button
                     className="rounded-none"
                     onClick={() => {
@@ -86,6 +75,18 @@ export const WagmiWrapper: FCC = ({ children }) => {
                     ) : (
                       <>Disconnect Wallet</>
                     )}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (theme === "dark") {
+                        return setTheme("light");
+                      } else {
+                        return setTheme("dark");
+                      }
+                    }}
+                  >
+                    {theme === "light" && <Moon />}
+                    {theme === "dark" && <Sun />}
                   </Button>
                 </div>
               </div>
