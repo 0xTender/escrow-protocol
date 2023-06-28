@@ -49,7 +49,7 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 export const WagmiWrapper: FCC = ({ children }) => {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const { address } = useAccount();
   const { open } = useWeb3Modal();

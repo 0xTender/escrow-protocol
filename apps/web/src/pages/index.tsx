@@ -6,8 +6,9 @@ import { WagmiWrapper } from "@app/components/WagmiWrapper";
 import { useContext, useState } from "react";
 import { cn } from "@app/utils";
 import { ThemeContext } from "@app/hooks/useTheme";
+import { Home } from "@app/components/Home";
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   const { theme } = useContext(ThemeContext);
   return (
     <>
@@ -17,10 +18,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/logo.png" />
       </Head>
       <div className={cn("bg-background text-foreground", theme)}>
-        <WagmiWrapper></WagmiWrapper>
+        <WagmiWrapper>
+          <Home />
+        </WagmiWrapper>
       </div>
     </>
   );
 };
 
-export default Home;
+export default HomePage;
