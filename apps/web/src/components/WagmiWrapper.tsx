@@ -47,11 +47,22 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 export const WagmiWrapper: FCC = ({ children }) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const { address } = useAccount();
-  const { open, close } = useWeb3Modal();
+  const { open } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!localStorage) {
+      return;
+    }
+    const localTheme = localStorage.getItem("theme");
+    console.log({ localTheme });
+    if (localTheme === "dark" || localTheme === "light") {
+      setTheme(localTheme);
+    }
+  }, [hydrated]);
 
   return (
     <>

@@ -9,9 +9,13 @@ import { useEffect, useState } from "react";
 import { WagmiWrapper } from "@app/components/WagmiWrapper";
 
 const ThemeContextWrapper: FCC = ({ children }) => {
-  const [theme, setTheme] = useState<"dark" | "light">("light");
+  const [theme, setTheme] = useState<"dark" | "light">();
 
   useEffect(() => {
+    if (theme === undefined) {
+      return;
+    }
+
     if (theme === "dark") {
       localStorage.setItem("theme", "dark");
       document.body.classList.add("dark");
@@ -20,16 +24,6 @@ const ThemeContextWrapper: FCC = ({ children }) => {
       document.body.classList.remove("dark");
     }
   }, [theme]);
-
-  useEffect(() => {
-    if (!localStorage) {
-      return;
-    }
-    const localTheme = localStorage.getItem("theme");
-    if (localTheme === "dark" || localTheme === "light") {
-      setTheme(localTheme);
-    }
-  }, []);
 
   return (
     <>
