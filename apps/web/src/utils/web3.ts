@@ -1,6 +1,7 @@
 import { addresses } from "@root/core";
 import { env } from "@app/env.mjs";
 import { isAddress, parseEther } from "viem";
+import { z } from "zod";
 
 export type AddressType = `0x${string}`;
 
@@ -13,6 +14,18 @@ export const getAddress = (
 ) => {
   return (addresses as any)[env.NEXT_PUBLIC_CHAIN_ID.toString()][name];
 };
+
+export const zAddr = [
+  (val: any) => {
+    if (typeof val === "string" && val.startsWith("0x") && isAddress(val)) {
+      return true;
+    }
+    return false;
+  },
+  {
+    message: "Invalid address. Please provide a valid address.",
+  },
+] as const;
 
 export const isAddr = [
   (e: string) => {

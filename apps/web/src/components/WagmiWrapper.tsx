@@ -16,6 +16,7 @@ import { Button } from "./ui/button";
 import { cn } from "@app/utils";
 import type { FCC } from "@app/utils";
 import { ThemeContext } from "@app/hooks/useTheme";
+import Link from "next/link";
 
 const chains = [localhost];
 
@@ -46,7 +47,7 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 export const WagmiWrapper: FCC = ({ children }) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const { address } = useAccount();
-  const { open } = useWeb3Modal();
+  const { open, close } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     setHydrated(true);
@@ -58,10 +59,10 @@ export const WagmiWrapper: FCC = ({ children }) => {
         {hydrated && (
           <>
             <div className={"mb-10 flex items-center justify-between"}>
-              <div>
+              <Link href="/">
                 <div className="font-bold">0xTender</div>
                 <div className="font-mono text-sm">Escrow</div>
-              </div>
+              </Link>
               <div className="gap-4">
                 <div className="flex items-center space-x-2">
                   <Button

@@ -6,12 +6,7 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 import { EscrowABI, TetherABI, WrappedEtherABI } from "@root/core";
-import {
-  AddressType,
-  getAddress,
-  isAddr,
-  isEtherWithGreaterThanZero,
-} from "@app/utils/web3";
+import { getAddress } from "@app/utils/web3";
 import { Input } from "@app/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,39 +31,15 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-
-const formSchema = z.object({
-  counterParty: z.string().refine(...isAddr),
-  initiatorToken: z.string().refine(...isAddr),
-  initiatorAmount: z.string().min(1).refine(isEtherWithGreaterThanZero, {
-    message:
-      "Invalid amount. Please provide a valid amount in the unit ether and greater than zero.",
-  }),
-  counterToken: z.string().refine(...isAddr),
-  counterAmount: z.string().refine(isEtherWithGreaterThanZero, {
-    message:
-      "Invalid amount. Please provide a valid amount in the unit ether and greater than zero",
-  }),
-});
+import { swapERC20FormSchema } from "@app/hooks/interactions/useSwapERC20";
 
 export const Create: FC = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      initiatorToken: "",
-      initiatorAmount: "",
-    },
+  const form = useForm<z.infer<typeof swapERC20FormSchema>>({
+    resolver: zodResolver(swapERC20FormSchema),
+    defaultValues: {},
   });
 
   const { address } = useAccount();
-
-  const [beginEscrowState, setBeginEscrowState] = useState<{
-    escrowExtension: AddressType;
-    data: AddressType;
-  }>({
-    escrowExtension: "0x",
-    data: "0x",
-  });
 
   const { writeAsync } = useContractWrite({
     address: getAddress("Escrow"),
