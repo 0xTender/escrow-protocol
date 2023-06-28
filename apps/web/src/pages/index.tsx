@@ -18,9 +18,7 @@ const HomePage: NextPage = () => {
         <link rel="icon" href="/logo.png" />
       </Head>
       <div className={cn("bg-background text-foreground", theme)}>
-        <WagmiWrapper>
-          <Home />
-        </WagmiWrapper>
+        <Home />
       </div>
     </>
   );

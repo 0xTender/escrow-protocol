@@ -1,8 +1,17 @@
-import { FC } from "react";
-import { useAccount, useContractReads } from "wagmi";
-import { TetherABI, WrappedEtherABI } from "@root/core";
-import { getAddress } from "@app/utils/web3";
-import { isAddress } from "viem";
+import { FC, useState } from "react";
+import {
+  useAccount,
+  useContractReads,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import { EscrowABI, TetherABI, WrappedEtherABI } from "@root/core";
+import {
+  AddressType,
+  getAddress,
+  isAddr,
+  isEtherWithGreaterThanZero,
+} from "@app/utils/web3";
 import { Input } from "@app/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,16 +27,20 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { encodeAbiParameters } from "viem";
 
 const formSchema = z.object({
-  initiatorToken: z.string().refine(
-    (e) => {
-      return isAddress(e);
-    },
-    {
-      message: "Invalid address. Please provide a valid address.",
-    }
-  ),
+  counterParty: z.string().refine(...isAddr),
+  initiatorToken: z.string().refine(...isAddr),
+  initiatorAmount: z.string().min(1).refine(isEtherWithGreaterThanZero, {
+    message:
+      "Invalid amount. Please provide a valid amount in the unit ether and greater than zero.",
+  }),
+  counterToken: z.string().refine(...isAddr),
+  counterAmount: z.string().refine(isEtherWithGreaterThanZero, {
+    message:
+      "Invalid amount. Please provide a valid amount in the unit ether and greater than zero",
+  }),
 });
 
 export const Home: FC = () => {
@@ -35,10 +48,25 @@ export const Home: FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       initiatorToken: "",
+      initiatorAmount: "",
     },
   });
 
   const { address } = useAccount();
+
+  const [beginEscrowState, setBeginEscrowState] = useState<{
+    escrowExtension: AddressType;
+    data: AddressType;
+  }>({
+    escrowExtension: "0x",
+    data: "0x",
+  });
+
+  const { writeAsync } = useContractWrite({
+    address: getAddress("Escrow"),
+    abi: EscrowABI,
+    functionName: "beginEscrow",
+  });
 
   useContractReads({
     enabled: !!address,
@@ -62,7 +90,60 @@ export const Home: FC = () => {
     <div>
       <h1>Create an agreement</h1>
       <Form {...form}>
-        <form className="space-y-8" onSubmit={form.handleSubmit(() => {})}>
+        <form
+          className="space-y-8"
+          onSubmit={form.handleSubmit((data) => {
+            console.log(data);
+
+            writeAsync({
+              args: [
+                getAddress("SwapERC20Extension"),
+                encodeAbiParameters(
+                  [
+                    { type: "address" },
+                    { type: "address" },
+                    { type: "address" },
+                    { type: "uint256" },
+                    { type: "address" },
+                    { type: "uint256" },
+                    { type: "uint256" },
+                  ],
+                  [
+                    address!,
+                    data.counterParty,
+                    data.initiatorToken,
+                    data.initiatorAmount,
+                    data.counterToken,
+                    data.counterAmount,
+                    Date.now(),
+                  ]
+                ),
+              ],
+            });
+          })}
+        >
+          <FormField
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Counter Party</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter exchange with this signatory: 0x..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Enter exchange with this signatory
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+            name="counterParty"
+            control={form.control}
+          ></FormField>
+
           <FormField
             render={({ field }) => {
               return (
@@ -84,15 +165,69 @@ export const Home: FC = () => {
             name="initiatorToken"
             control={form.control}
           ></FormField>
+          <FormField
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Initiator Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Amount of token you will send for exchange: 0.0"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Amount of token you will send for exchange
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+            name="initiatorAmount"
+            control={form.control}
+          ></FormField>
+
+          <FormField
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Counter Token</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Token you will get from counter party"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>Token you will get.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+            name="counterToken"
+            control={form.control}
+          ></FormField>
+          <FormField
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Counter Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Amount of token you will get in exchange: 0.0"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Amount of token you will get in exchange
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+            name="counterAmount"
+            control={form.control}
+          ></FormField>
           <Button type="submit">Create Agreement</Button>
-          {/* <Label htmlFor="initiator-token">Initiator Token</Label>
-            <Input id="initiator-token" placeholder="Initiator Token" />
-          </div>
-          <div className="">
-            <Label htmlFor="initiator-amount">Initiator Amount</Label>
-            <Input id="initiator-amount" placeholder="Initiator Amount" />
-          </div>
-         */}
         </form>
       </Form>
     </div>
