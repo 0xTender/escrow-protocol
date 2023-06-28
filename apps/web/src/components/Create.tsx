@@ -43,7 +43,7 @@ const formSchema = z.object({
   }),
 });
 
-export const Home: FC = () => {
+export const Create: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

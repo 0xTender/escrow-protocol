@@ -13,11 +13,13 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Escrow Protocol - 0xTender</title>
+        <title>Escrow Protocol - Create Agreement - 0xTender</title>
         <meta name="description" content="Escrow Protocol - 0xTender" />
         <link rel="icon" href="/logo.png" />
       </Head>
-      <div className={cn("bg-background text-foreground", theme)}></div>
+      <div className={cn("bg-background text-foreground", theme)}>
+        <Create />
+      </div>
     </>
   );
 };
