@@ -9,6 +9,9 @@ import {
   CardFooter,
 } from "./ui/card";
 import { Plus, ShoppingBag, Tag } from "lucide-react";
+import Link from "next/link";
+import { api } from "@app/utils/api";
+import { useAccount } from "wagmi";
 
 const Gradient: FCC = ({ children }) => {
   return (
@@ -19,31 +22,45 @@ const Gradient: FCC = ({ children }) => {
 };
 
 export const Home: React.FC = () => {
+  const { address } = useAccount();
+
+  const { data } = api.escrow.salesAndPurchases.useQuery(
+    {
+      address,
+    },
+    {
+      enabled: !!address,
+    }
+  );
+
   return (
     <>
       <div className="flex flex-wrap gap-x-4 gap-y-4 p-8">
-        <Card className="w-60 cursor-pointer rounded-xl dark:bg-[#1B1B1B]">
-          <CardHeader>
-            <div className="h-12 w-12">
-              <Gradient>
-                <Plus />
-              </Gradient>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="pr-4 font-mono text-sm font-medium">
-              New Agreement
-            </div>
-          </CardContent>
-        </Card>
+        <Link href={"/create"}>
+          <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
+            <CardHeader>
+              <div className="h-12 w-12">
+                <Gradient>
+                  <Plus />
+                </Gradient>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="pr-4 font-mono text-sm font-medium">
+                New Agreement
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="w-60 cursor-pointer rounded-xl dark:bg-[#1B1B1B]">
-          <CardHeader>
+        <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
+          <CardHeader className="flex-row justify-between">
             <div className="h-12 w-12">
               <Gradient>
                 <Tag className="m-auto" />
               </Gradient>
             </div>
+            <div>{data && data[0]}</div>
           </CardHeader>
           <CardContent>
             <div className="pr-4 font-mono text-sm font-medium">
@@ -52,13 +69,14 @@ export const Home: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="w-60 cursor-pointer rounded-xl dark:bg-[#1B1B1B]">
-          <CardHeader>
+        <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
+          <CardHeader className="flex-row justify-between">
             <div className="h-12 w-12">
               <Gradient>
                 <ShoppingBag className="m-auto" />
               </Gradient>
             </div>
+            <div>{data && data[1]}</div>
           </CardHeader>
           <CardContent>
             <div className="pr-4 font-mono text-sm font-medium">

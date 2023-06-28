@@ -30,6 +30,9 @@ export const swapERC20FormSchema = z.object({
     message:
       "Invalid amount. Please provide a valid amount in the unit ether and greater than zero",
   }),
+  deadline: z.date({
+    required_error: "A deadline is required.",
+  }),
 });
 
 type MachineState =
@@ -106,7 +109,9 @@ export const useSwapERC20 = () => {
     hash: hash!,
     enabled: hash !== undefined && state === "watch-approve-tx",
     onSuccess: () => {
-      setState("pre-begin-escrow");
+      if (state === "watch-approve-tx") {
+        setState("pre-begin-escrow");
+      }
     },
   });
 
@@ -114,7 +119,9 @@ export const useSwapERC20 = () => {
     hash: hash!,
     enabled: hash !== undefined && state === "watch-begin-escrow-tx",
     onSuccess: () => {
-      setState("completed");
+      if (state === "watch-begin-escrow-tx") {
+        setState("completed");
+      }
     },
   });
 
@@ -185,7 +192,7 @@ export const useSwapERC20 = () => {
               data.initiatorAmount,
               data.counterToken,
               data.counterAmount,
-              Date.now(),
+              Math.floor(data.deadline.getTime() / 1000),
             ]
           ),
         ],

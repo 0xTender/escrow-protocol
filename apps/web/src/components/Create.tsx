@@ -1,12 +1,4 @@
-import { FC, useState } from "react";
-import {
-  useAccount,
-  useContractReads,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
-import { EscrowABI, TetherABI, WrappedEtherABI } from "@root/core";
-import { getContractAddress as getAddressUtil } from "@app/utils/web3";
+import { FC } from "react";
 import { Input } from "@app/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +14,9 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
-import { encodeAbiParameters } from "viem";
+
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
 import {
   Card,
   CardContent,
@@ -35,6 +29,10 @@ import {
   swapERC20FormSchema,
   useSwapERC20,
 } from "@app/hooks/interactions/useSwapERC20";
+import { cn } from "@app/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "./ui/calendar";
 
 export const Create: FC = () => {
   const form = useForm<z.infer<typeof swapERC20FormSchema>>({
@@ -61,7 +59,7 @@ export const Create: FC = () => {
             <FormField
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pb-3 leading-tight">
                     <FormLabel>Counter Party</FormLabel>
                     <FormControl>
                       <Input
@@ -83,7 +81,7 @@ export const Create: FC = () => {
             <FormField
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pb-3 leading-tight">
                     <FormLabel>Initiator Token</FormLabel>
                     <FormControl>
                       <Input
@@ -104,7 +102,7 @@ export const Create: FC = () => {
             <FormField
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pb-3 leading-tight">
                     <FormLabel>Initiator Amount</FormLabel>
                     <FormControl>
                       <Input
@@ -126,7 +124,7 @@ export const Create: FC = () => {
             <FormField
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pb-3 leading-tight">
                     <FormLabel>Counter Token</FormLabel>
                     <FormControl>
                       <Input
@@ -145,7 +143,7 @@ export const Create: FC = () => {
             <FormField
               render={({ field }) => {
                 return (
-                  <FormItem>
+                  <FormItem className="pb-3 leading-tight">
                     <FormLabel>Counter Amount</FormLabel>
                     <FormControl>
                       <Input
@@ -162,6 +160,50 @@ export const Create: FC = () => {
               }}
               name="counterAmount"
               control={form.control}
+            ></FormField>
+
+            {/*  */}
+            <FormField
+              control={form.control}
+              name="deadline"
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Deadline</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange as any}
+                          disabled={(date) =>
+                            date < new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormItem>
+                );
+              }}
             ></FormField>
           </CardContent>
           <CardFooter>
