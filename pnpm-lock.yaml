@@ -272,6 +272,9 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
+      tslib:
+        specifier: ^2.6.0
+        version: 2.6.0
       typechain:
         specifier: ^8.1.1
         version: 8.1.1(typescript@5.0.4)

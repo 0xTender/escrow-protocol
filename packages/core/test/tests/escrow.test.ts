@@ -4,7 +4,6 @@ import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 import { PromiseType } from "../fixtures/utils";
 import { expect } from "chai";
-import { SwapERC20Extension } from "../../typechain-types";
 enum EscrowState {
   NONE,
   BEGUN,

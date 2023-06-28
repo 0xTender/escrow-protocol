@@ -3,12 +3,12 @@ import Head from "next/head";
 
 // import { api } from "@app/utils/api";
 import { WagmiWrapper } from "@app/components/WagmiWrapper";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { cn } from "@app/utils";
+import { ThemeContext } from "@app/hooks/useTheme";
 
 const Home: NextPage = () => {
-  const [theme, setTheme] = useState<"dark" | "light" | "front">("light");
-
+  const { theme } = useContext(ThemeContext);
   return (
     <>
       <Head>
@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/logo.png" />
       </Head>
       <div className={cn("bg-background text-foreground", theme)}>
-        <WagmiWrapper {...{ setTheme, theme }}></WagmiWrapper>
+        <WagmiWrapper></WagmiWrapper>
       </div>
     </>
   );

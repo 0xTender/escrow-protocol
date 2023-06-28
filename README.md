@@ -35,3 +35,10 @@ pnpm run dev
 You can reset your local deployments with (destructive action):
 
 ./reset.sh
+
+## Sources
+
+### Design Inspirations
+
+- https://dribbble.com/shots/18261148-Escrow-mobile-design-dashboard-product-design
+- https://dribbble.com/shots/18524987-Escrow-Mobile-Dashboard-Dark-mode

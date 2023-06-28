@@ -5,14 +5,22 @@ import {
   w3mProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal, useWeb3Modal } from "@web3modal/react";
-import { useState, useEffect, FC, Dispatch, SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  FC,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
 import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { localhost } from "viem/chains";
 import { Button } from "./ui/button";
-import Image from "next/image";
 import { cn } from "@app/utils";
+import type { FCC } from "@app/utils";
+import { ThemeContext } from "@app/hooks/useTheme";
 
 const chains = [localhost];
 
@@ -40,10 +48,9 @@ const wagmiConfig = createConfig({
 
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
-export const WagmiWrapper: FC<{
-  setTheme: Dispatch<SetStateAction<"dark" | "light" | "front">>;
-  theme: "dark" | "light" | "front";
-}> = ({ theme }) => {
+export const WagmiWrapper: FCC = ({ children }) => {
+  const { theme, setTheme } = useContext(ThemeContext);
+
   const { address } = useAccount();
   const { open } = useWeb3Modal();
   const [hydrated, setHydrated] = useState(false);
@@ -67,26 +74,30 @@ export const WagmiWrapper: FC<{
                 <div className="font-mono text-sm">Escrow</div>
               </div>
               <div className="gap-4">
-                <WagmiConfig config={wagmiConfig}>
-                  <div>
-                    <Button
-                      className="rounded-none"
-                      onClick={() => {
-                        open().catch(console.error);
-                      }}
-                    >
-                      {address === undefined ? (
-                        "Connect Wallet"
-                      ) : (
-                        <>Disconnect Wallet</>
-                      )}
-                    </Button>
-                  </div>
-                </WagmiConfig>
+                <div>
+                  <Button
+                    className="rounded-none"
+                    onClick={() => {
+                      open().catch(console.error);
+                    }}
+                  >
+                    {address === undefined ? (
+                      "Connect Wallet"
+                    ) : (
+                      <>Disconnect Wallet</>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <>{address && <></>}</>
+            <>
+              {address && (
+                <>
+                  <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
+                </>
+              )}
+            </>
           </>
         )}
       </main>
