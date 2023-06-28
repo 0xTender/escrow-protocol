@@ -6,7 +6,7 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 import { EscrowABI, TetherABI, WrappedEtherABI } from "@root/core";
-import { getAddress } from "@app/utils/web3";
+import { getContractAddress as getAddressUtil } from "@app/utils/web3";
 import { Input } from "@app/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,10 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { swapERC20FormSchema } from "@app/hooks/interactions/useSwapERC20";
+import {
+  swapERC20FormSchema,
+  useSwapERC20,
+} from "@app/hooks/interactions/useSwapERC20";
 
 export const Create: FC = () => {
   const form = useForm<z.infer<typeof swapERC20FormSchema>>({
@@ -42,7 +45,7 @@ export const Create: FC = () => {
   const { address } = useAccount();
 
   const { writeAsync } = useContractWrite({
-    address: getAddress("Escrow"),
+    address: getAddressUtil("Escrow"),
     abi: EscrowABI,
     functionName: "beginEscrow",
   });
@@ -52,18 +55,20 @@ export const Create: FC = () => {
     contracts: [
       {
         abi: TetherABI,
-        address: getAddress("Tether"),
+        address: getAddressUtil("Tether"),
         functionName: "balanceOf",
         args: [address!],
       },
       {
         abi: WrappedEtherABI,
-        address: getAddress("WrappedEther"),
+        address: getAddressUtil("WrappedEther"),
         functionName: "balanceOf",
         args: [address!],
       },
     ],
   });
+
+  const { setSwapData } = useSwapERC20();
 
   return (
     <Card>
@@ -75,33 +80,33 @@ export const Create: FC = () => {
         <form
           className="space-y-8"
           onSubmit={form.handleSubmit((data) => {
-            console.log(data);
+            setSwapData(data);
 
-            writeAsync({
-              args: [
-                getAddress("SwapERC20Extension"),
-                encodeAbiParameters(
-                  [
-                    { type: "address" },
-                    { type: "address" },
-                    { type: "address" },
-                    { type: "uint256" },
-                    { type: "address" },
-                    { type: "uint256" },
-                    { type: "uint256" },
-                  ],
-                  [
-                    address!,
-                    data.counterParty,
-                    data.initiatorToken,
-                    data.initiatorAmount,
-                    data.counterToken,
-                    data.counterAmount,
-                    Date.now(),
-                  ]
-                ),
-              ],
-            });
+            // writeAsync({
+            //   args: [
+            //     getAddress("SwapERC20Extension"),
+            //     encodeAbiParameters(
+            //       [
+            //         { type: "address" },
+            //         { type: "address" },
+            //         { type: "address" },
+            //         { type: "uint256" },
+            //         { type: "address" },
+            //         { type: "uint256" },
+            //         { type: "uint256" },
+            //       ],
+            //       [
+            //         address!,
+            //         data.counterParty,
+            //         data.initiatorToken,
+            //         data.initiatorAmount,
+            //         data.counterToken,
+            //         data.counterAmount,
+            //         Date.now(),
+            //       ]
+            //     ),
+            //   ],
+            // });
           })}
         >
           <CardContent>
