@@ -15,7 +15,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "./ui/form";
+import { Button } from "./ui/button";
 
 const formSchema = z.object({
   initiatorToken: z.string().refine(
@@ -23,7 +25,7 @@ const formSchema = z.object({
       return isAddress(e);
     },
     {
-      message: "Invalid address",
+      message: "Invalid address. Please provide a valid address.",
     }
   ),
 });
@@ -60,7 +62,7 @@ export const Home: FC = () => {
     <div>
       <h1>Create an agreement</h1>
       <Form {...form}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-8" onSubmit={form.handleSubmit(() => {})}>
           <FormField
             render={({ field }) => {
               return (
@@ -75,12 +77,14 @@ export const Home: FC = () => {
                   <FormDescription>
                     Token you will send for exchange
                   </FormDescription>
+                  <FormMessage />
                 </FormItem>
               );
             }}
             name="initiatorToken"
             control={form.control}
           ></FormField>
+          <Button type="submit">Create Agreement</Button>
           {/* <Label htmlFor="initiator-token">Initiator Token</Label>
             <Input id="initiator-token" placeholder="Initiator Token" />
           </div>
@@ -88,7 +92,7 @@ export const Home: FC = () => {
             <Label htmlFor="initiator-amount">Initiator Amount</Label>
             <Input id="initiator-amount" placeholder="Initiator Amount" />
           </div>
-          <Button type="submit">Create Agreement</Button> */}
+         */}
         </form>
       </Form>
     </div>
