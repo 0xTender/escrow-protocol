@@ -22,23 +22,67 @@ import {
 } from "@app/components/ui/table";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { AgreementStatus } from "@app/types";
+import { Badge } from "@app/components/ui/badge";
+import { millisecondsToStr, secondsToString } from "@app/utils/date";
+import { Button } from "@app/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+} from "@app/components/ui/collapsible";
+import { CollapsibleContent } from "@radix-ui/react-collapsible";
 
-export const columns: ColumnDef<E_SwapStateChanged_SwapERC20Extension>[] = [
+const getColor = (status: string) => {
+  switch (status) {
+    case AgreementStatus.Active:
+      return "bg-green-400 hover:bg-green-500";
+    case AgreementStatus.Expired:
+      return "bg-red-400 hover:bg-red-400";
+    case AgreementStatus.Cancelled:
+      return "bg-red-400 hover:bg-red-400";
+    case AgreementStatus.Completed:
+      return "bg-blue-400 hover:bg-blue-400";
+    default:
+      return "bg-gray-400";
+  }
+};
+
+export const columns: ColumnDef<
+  E_SwapStateChanged_SwapERC20Extension & {
+    status: AgreementStatus;
+    initiatorTokenName: string;
+    counterTokenName: string;
+  }
+>[] = [
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status: string = row.getValue("status");
+      return <Badge className={`${getColor(status)}`}>{status}</Badge>;
+    },
+  },
   {
     header: "From",
-    accessorFn: (row) => row.A_initiator,
+    accessorFn: (data) => data.A_initiator,
+  },
+  {
+    accessorKey: "counterTokenName",
+    header: "Token Requested",
+  },
+  {
+    accessorKey: "initiatorTokenName",
+    header: "Token Offered",
   },
   {
     accessorKey: "A_deadline",
     header: "Valid Till",
-  },
-  {
-    accessorKey: "A_counterToken",
-    header: "Token Requested",
-  },
-  {
-    accessorKey: "A_initiatorToken",
-    header: "Token Offered",
+    cell: ({ row }) => {
+      const deadline: number = parseInt(row.getValue("A_deadline")) * 1000;
+      if (deadline > Date.now())
+        return <>{secondsToString((deadline - Date.now()) / 1000)}</>;
+      else return <></>;
+    },
   },
 ];
 
@@ -114,7 +158,6 @@ const PurchasePage: NextPage = () => {
       refetchInterval: 60 * 1000,
     }
   );
-
   return (
     <>
       <Head>

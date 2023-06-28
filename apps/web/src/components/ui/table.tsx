@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@app/utils";
+import { Collapsible } from "./collapsible";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -59,7 +60,10 @@ const TableRow = React.forwardRef<
       className
     )}
     {...props}
-  />
+    data-state={"closed"}
+  >
+    {props.children}
+  </tr>
 ));
 TableRow.displayName = "TableRow";
 
