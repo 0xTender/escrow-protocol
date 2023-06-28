@@ -40,4 +40,27 @@ export const escrowRouter = createTRPCRouter({
 
       return instances;
     }),
+
+  purchases: publicProcedure
+    .input(
+      z.object({
+        address: z
+          .custom<AddressType>()
+          .refine(...isAddr)
+          .optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      if (input.address === undefined) {
+        return { instances: [] };
+      }
+      const instances =
+        await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.findMany({
+          where: {
+            A_counter: input.address,
+            A_state: `${EscrowState.BEGUN}`,
+          },
+        });
+      return { instances };
+    }),
 });

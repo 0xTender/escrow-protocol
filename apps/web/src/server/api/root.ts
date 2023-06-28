@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "@app/server/api/trpc";
 import { exampleRouter } from "@app/server/api/routers/example";
 import { escrowRouter } from "@app/server/api/routers/escrow";
+import { tokenRouter } from "./routers/tokens";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { escrowRouter } from "@app/server/api/routers/escrow";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   escrow: escrowRouter,
+  token: tokenRouter,
 });
 
 // export type definition of API
