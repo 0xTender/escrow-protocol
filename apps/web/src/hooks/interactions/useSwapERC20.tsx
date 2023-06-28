@@ -16,6 +16,7 @@ import { ERC20ABI } from "@app/utils/interfaces/IERC20ABI";
 import { getContractAddress } from "@app/utils/web3";
 import { encodeAbiParameters, parseEther } from "viem";
 import { EscrowABI } from "@root/core";
+import { useRouter } from "next/router";
 
 export const swapERC20FormSchema = z.object({
   counterParty: z.custom<AddressType>(...zAddr),
@@ -134,6 +135,8 @@ export const useSwapERC20 = () => {
     }
   }, [state, data]);
 
+  const { push } = useRouter();
+
   useEffect(() => {
     if (data) {
       setState("pre-read-allowance");
@@ -187,6 +190,10 @@ export const useSwapERC20 = () => {
           ),
         ],
       });
+    }
+
+    if (state === "completed") {
+      push("/");
     }
   }, [state, data]);
 

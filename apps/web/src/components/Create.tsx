@@ -42,32 +42,6 @@ export const Create: FC = () => {
     defaultValues: {},
   });
 
-  const { address } = useAccount();
-
-  const { writeAsync } = useContractWrite({
-    address: getAddressUtil("Escrow"),
-    abi: EscrowABI,
-    functionName: "beginEscrow",
-  });
-
-  useContractReads({
-    enabled: !!address,
-    contracts: [
-      {
-        abi: TetherABI,
-        address: getAddressUtil("Tether"),
-        functionName: "balanceOf",
-        args: [address!],
-      },
-      {
-        abi: WrappedEtherABI,
-        address: getAddressUtil("WrappedEther"),
-        functionName: "balanceOf",
-        args: [address!],
-      },
-    ],
-  });
-
   const { setSwapData } = useSwapERC20();
 
   return (
@@ -81,32 +55,6 @@ export const Create: FC = () => {
           className="space-y-8"
           onSubmit={form.handleSubmit((data) => {
             setSwapData(data);
-
-            // writeAsync({
-            //   args: [
-            //     getAddress("SwapERC20Extension"),
-            //     encodeAbiParameters(
-            //       [
-            //         { type: "address" },
-            //         { type: "address" },
-            //         { type: "address" },
-            //         { type: "uint256" },
-            //         { type: "address" },
-            //         { type: "uint256" },
-            //         { type: "uint256" },
-            //       ],
-            //       [
-            //         address!,
-            //         data.counterParty,
-            //         data.initiatorToken,
-            //         data.initiatorAmount,
-            //         data.counterToken,
-            //         data.counterAmount,
-            //         Date.now(),
-            //       ]
-            //     ),
-            //   ],
-            // });
           })}
         >
           <CardContent>
