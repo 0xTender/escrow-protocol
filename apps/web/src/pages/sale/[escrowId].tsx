@@ -238,18 +238,20 @@ const PurchaseEscrowPage: FC = () => {
 
             {escrowState && (
               <div className="flex gap-2">
-                {escrowState[0] === EscrowState.BEGUN && isExpired && (
-                  <Button
-                    variant="destructive"
-                    onClick={() => {
-                      if (state === "none") {
-                        setState("pre-cancel");
-                      }
-                    }}
-                  >
-                    Reject
-                  </Button>
-                )}
+                {(escrowState[0] === EscrowState.BEGUN && isExpired) ||
+                  (escrowState[1] ===
+                    getContractAddress("MultiSwapExtension") && (
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        if (state === "none") {
+                          setState("pre-cancel");
+                        }
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  ))}
               </div>
             )}
           </CardContent>
