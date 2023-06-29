@@ -1,4 +1,4 @@
-import React, { useState, type FC } from "react";
+import React, { useState, type FC, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -58,6 +58,10 @@ export const MultiSwapExtension: FC = () => {
   }>();
 
   const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    setError(undefined);
+  }, [exchanges]);
 
   return (
     <>

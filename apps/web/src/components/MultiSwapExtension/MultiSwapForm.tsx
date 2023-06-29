@@ -8,11 +8,10 @@ import {
   isEtherWithGreaterThanZero,
   getContractAddress,
 } from "@app/utils/web3";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { MultiSwapStepper } from "./MultiSwapStepper";
-import { Button } from "@app/components/ui/button";
 import { useAllowance } from "@app/hooks/useAllowance";
 
 export const multiSwapFormSchema = z.object({
@@ -83,6 +82,7 @@ export const MultiSwapForm: FC<{
                 void form.handleSubmit((data) => {
                   console.log(data);
                   if (allowanceState !== "none") {
+                    setError("");
                     init();
                   }
                 })(e);

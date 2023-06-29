@@ -27,8 +27,6 @@ export const MultiSwapStepper: FC<{
     }
   }, [activeStep, setFocus]);
 
-  console.log(form);
-
   return (
     <>
       {activeStep === 0 && (
