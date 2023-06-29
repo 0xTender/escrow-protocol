@@ -4,15 +4,22 @@ import { DayPicker } from "react-day-picker";
 
 import { cn } from "@app/utils";
 import { buttonVariants } from "@app/components/ui/button";
+import { Input } from "./input";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  handleChange: any;
+};
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  selected,
+  handleChange,
   ...props
 }: CalendarProps) {
+  const [timeValue, setTimeValue] = React.useState<string>("00:00");
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -53,6 +60,39 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
       }}
+      footer={
+        <>
+          <p>
+            Pick a time:{" "}
+            <Input
+              type="time"
+              value={timeValue}
+              onChange={(e) => {
+                const time = e.target.value;
+                if (!selected) {
+                  setTimeValue(time);
+                  return;
+                }
+                const [hours, minutes] = time
+                  .split(":")
+                  .map((str) => parseInt(str, 10));
+
+                const newSelectedDate = new Date(
+                  (selected as Date).getFullYear(),
+                  (selected as Date).getMonth(),
+                  (selected as Date).getDate(),
+                  hours,
+                  minutes
+                );
+                console.log({ newSelectedDate, handleChange });
+                setTimeValue(time);
+                handleChange(newSelectedDate);
+              }}
+            />
+          </p>
+          <p>Selected date: {selected ? selected.toLocaleString() : "None"}</p>
+        </>
+      }
       {...props}
     />
   );
