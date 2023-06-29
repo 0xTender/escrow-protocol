@@ -1,33 +1,37 @@
-import { type Dispatch, type SetStateAction, type FC } from "react";
+import { type Dispatch, type SetStateAction, type FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import type { multiSwapFormSchema } from "./MultiSwapForm";
 import type { z } from "zod";
 import { TokenSelector } from "./ERC20Selector";
 import { Button } from "@app/components/ui/button";
+import { CounterParty } from "@app/components/CreateStepper/CounterParty";
 
 export const MultiSwapStepper: FC<{
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }> = ({ activeStep, setActiveStep }) => {
-  const { watch, formState } =
+  const { watch, formState, setFocus } =
     useFormContext<z.infer<typeof multiSwapFormSchema>>();
   const form = watch();
+
+  useEffect(() => {
+    if (activeStep === 0) {
+      setFocus("counterParty");
+    }
+    if (activeStep === 1) {
+      setFocus("initiatorToken");
+    }
+    if (activeStep === 3) {
+      setFocus("counterToken");
+    }
+  }, [activeStep, setFocus]);
 
   return (
     <>
       {activeStep === 0 && (
         <div>
           <div className="flex gap-2">
-            <Button
-              disabled={formState.errors.counterParty !== undefined}
-              onClick={() => {
-                if (formState.errors.counterParty === undefined) {
-                  setActiveStep((s) => s + 1);
-                }
-              }}
-            >
-              Next
-            </Button>
+            <CounterParty setActiveStep={setActiveStep}></CounterParty>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
-import { ExchangeNames, ExchangeType } from "@app/types";
+import { ExchangeNames, type ExchangeType } from "@app/types";
 import { api } from "@app/utils/api";
-import { useEffect, type FC, useState, ChangeEvent } from "react";
+import { type FC } from "react";
 import {
   FormControl,
   FormDescription,
@@ -10,12 +10,11 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { multiSwapFormSchema } from "@app/components/MultiSwapExtension/MultiSwapForm";
-import { z } from "zod";
+import { type multiSwapFormSchema } from "@app/components/MultiSwapExtension/MultiSwapForm";
+import { type z } from "zod";
 import { useFormContext } from "react-hook-form";
-import { AddressType } from "@app/utils/web3";
+import { type AddressType } from "@app/utils/web3";
 import { Badge } from "../ui/badge";
-import { Button } from "@app/components/ui/button";
 
 export const TokenSelector: FC<{
   values:
