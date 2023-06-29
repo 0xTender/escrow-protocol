@@ -169,7 +169,7 @@ const PurchaseEscrowPage: FC = () => {
         <meta name="description" content="Escrow Protocol - 0xTender" />
         <link rel="icon" href="/logo.png" />
       </Head>{" "}
-      <Card>
+      <Card className="dark:rounded-xl dark:bg-[#1B1B1B]">
         <CardHeader>
           <CardDescription className="flex gap-x-2">
             Agreement Id: {data && escrowId}
@@ -187,7 +187,7 @@ const PurchaseEscrowPage: FC = () => {
           </CardDescription>
         </CardHeader>
         {data?.details && (
-          <CardContent className="grid grid-cols-2 gap-2">
+          <CardContent className="grid gap-2 md:grid-cols-2">
             <div className="flex items-center space-x-2">
               <div>
                 Initiator:{" "}

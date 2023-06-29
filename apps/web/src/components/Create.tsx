@@ -43,7 +43,7 @@ export const Create: FC = () => {
   const { setSwapData } = useSwapERC20Create();
 
   return (
-    <Card>
+    <Card className="dark:rounded-xl dark:bg-[#1B1B1B]">
       <CardHeader>
         <CardTitle>Create an agreement</CardTitle>
         <CardDescription></CardDescription>
