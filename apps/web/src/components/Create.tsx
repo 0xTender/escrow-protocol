@@ -27,7 +27,7 @@ import {
 } from "./ui/card";
 import {
   swapERC20FormSchema,
-  useSwapERC20,
+  useSwapERC20Create,
 } from "@app/hooks/interactions/useSwapERC20";
 import { cn } from "@app/utils";
 import { format } from "date-fns";
@@ -40,7 +40,7 @@ export const Create: FC = () => {
     defaultValues: {},
   });
 
-  const { setSwapData } = useSwapERC20();
+  const { setSwapData } = useSwapERC20Create();
 
   return (
     <Card>

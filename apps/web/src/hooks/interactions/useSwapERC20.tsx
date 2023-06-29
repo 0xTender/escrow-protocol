@@ -45,7 +45,7 @@ type MachineState =
   | "watch-begin-escrow-tx"
   | "completed";
 
-export const useSwapERC20 = () => {
+export const useSwapERC20Create = () => {
   const [data, setData] = useState<z.infer<typeof swapERC20FormSchema>>();
   const [state, setState] = useState<MachineState>();
   const { address } = useAccount();
