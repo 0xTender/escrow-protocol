@@ -9,7 +9,7 @@ import { DataTable, columns } from "@app/components/DataTable";
 
 const SalePage: NextPage = () => {
   const { address } = useAccount();
-  const { data } = api.escrow.purchases.useQuery(
+  const { data } = api.escrow.sales.useQuery(
     { address },
     {
       enabled: !!address,
@@ -19,7 +19,7 @@ const SalePage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Escrow Protocol - Purchase Agreements - 0xTender</title>
+        <title>Escrow Protocol - Sale Agreements - 0xTender</title>
         <meta name="description" content="Escrow Protocol - 0xTender" />
         <link rel="icon" href="/logo.png" />
       </Head>
@@ -27,7 +27,7 @@ const SalePage: NextPage = () => {
         {data && (
           <>
             <DataTable
-              columns={columns("purchase")}
+              columns={columns("sale")}
               data={data.instances}
             ></DataTable>
           </>

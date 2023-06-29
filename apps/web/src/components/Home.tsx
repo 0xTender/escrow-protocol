@@ -52,22 +52,23 @@ export const Home: React.FC = () => {
             </CardContent>
           </Card>
         </Link>
-
-        <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
-          <CardHeader className="flex-row justify-between">
-            <div className="h-12 w-12">
-              <Gradient>
-                <Tag className="m-auto" />
-              </Gradient>
-            </div>
-            <div>{data && data[0]}</div>
-          </CardHeader>
-          <CardContent>
-            <div className="pr-4 font-mono text-sm font-medium">
-              Sale Agreements
-            </div>
-          </CardContent>
-        </Card>
+        <Link href={"/sale"}>
+          <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
+            <CardHeader className="flex-row justify-between">
+              <div className="h-12 w-12">
+                <Gradient>
+                  <Tag className="m-auto" />
+                </Gradient>
+              </div>
+              <div>{data && data[0]}</div>
+            </CardHeader>
+            <CardContent>
+              <div className="pr-4 font-mono text-sm font-medium">
+                Sale Agreements
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         <Link href={"/purchase"}>
           <Card className="w-60 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]">
