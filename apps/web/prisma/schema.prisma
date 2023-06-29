@@ -56,6 +56,22 @@ model Event_pm {
   E_Approval_WrappedEther E_Approval_WrappedEther[]
 
   E_Transfer_WrappedEther E_Transfer_WrappedEther[]
+
+  E_Approval_TestNFT E_Approval_TestNFT[]
+
+  E_ApprovalForAll_TestNFT E_ApprovalForAll_TestNFT[]
+
+  E_Paused_TestNFT E_Paused_TestNFT[]
+
+  E_RoleAdminChanged_TestNFT E_RoleAdminChanged_TestNFT[]
+
+  E_RoleGranted_TestNFT E_RoleGranted_TestNFT[]
+
+  E_RoleRevoked_TestNFT E_RoleRevoked_TestNFT[]
+
+  E_Transfer_TestNFT E_Transfer_TestNFT[]
+
+  E_Unpaused_TestNFT E_Unpaused_TestNFT[]
 }
 
 model E_EscrowExtensionUpdated_Escrow {
@@ -207,6 +223,118 @@ model E_Transfer_WrappedEther {
   A_to String @db.VarChar(1000)
 
   A_value String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Approval_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_owner String @db.VarChar(1000)
+
+  A_approved String @db.VarChar(1000)
+
+  A_tokenId String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_ApprovalForAll_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_owner String @db.VarChar(1000)
+
+  A_operator String @db.VarChar(1000)
+
+  A_approved String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Paused_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_account String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_RoleAdminChanged_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_role String @db.VarChar(1000)
+
+  A_previousAdminRole String @db.VarChar(1000)
+
+  A_newAdminRole String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_RoleGranted_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_role String @db.VarChar(1000)
+
+  A_account String @db.VarChar(1000)
+
+  A_sender String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_RoleRevoked_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_role String @db.VarChar(1000)
+
+  A_account String @db.VarChar(1000)
+
+  A_sender String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Transfer_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_from String @db.VarChar(1000)
+
+  A_to String @db.VarChar(1000)
+
+  A_tokenId String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_Unpaused_TestNFT {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_account String @db.VarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

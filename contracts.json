@@ -18,5 +18,10 @@
     "name": "WrappedEther",
     "path": "./packages/core/deployments/localhost/WrappedEther.json",
     "rpc": "http://127.0.0.1:8545/"
+  },
+  {
+    "name": "TestNFT",
+    "path": "./packages/core/deployments/localhost/TestNFT.json",
+    "rpc": "http://127.0.0.1:8545/"
   }
 ]
