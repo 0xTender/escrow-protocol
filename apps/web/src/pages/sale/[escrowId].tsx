@@ -20,7 +20,7 @@ import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect, useState } from "react";
-import { encodeAbiParameters, formatEther, parseEther } from "viem";
+import { encodeAbiParameters, formatEther } from "viem";
 import {
   useAccount,
   useContractRead,
@@ -122,7 +122,7 @@ const PurchaseEscrowPage: FC = () => {
   });
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-cancel-tx",
     onSuccess: () => {
       if (state === "watch-cancel-tx") {
@@ -157,6 +157,7 @@ const PurchaseEscrowPage: FC = () => {
         console.error(error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (

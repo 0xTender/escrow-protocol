@@ -7,7 +7,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@app/components/ui/card";
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
@@ -22,7 +21,7 @@ import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect, useState } from "react";
-import { encodeAbiParameters, formatEther, parseEther } from "viem";
+import { encodeAbiParameters, formatEther } from "viem";
 import {
   useAccount,
   useContractRead,
@@ -103,7 +102,7 @@ const PurchaseEscrowPage: FC = () => {
   const [hash, setHash] = useState<AddressType>();
 
   const { data: counterAllowance } = useContractRead({
-    address: (data?.details.A_counterToken as any) ?? "0x",
+    address: (data?.details.A_counterToken as AddressType) ?? "0x",
     abi: ERC20ABI,
     functionName: "allowance",
     enabled:
@@ -111,14 +110,14 @@ const PurchaseEscrowPage: FC = () => {
       getContractAddress("Escrow") !== "0x" &&
       !!address &&
       state === "pre-read-allowance",
-    args: [address!, getContractAddress("SwapERC20Extension")!],
+    args: [address ?? "0x", getContractAddress("SwapERC20Extension") ?? "0x"],
     onSuccess: () => {
       setState("read-allowance");
     },
   });
 
   const { write: approve } = useContractWrite({
-    address: (data?.details.A_counterToken as any) ?? "0x",
+    address: (data?.details.A_counterToken as AddressType) ?? "0x",
     abi: ERC20ABI,
     functionName: "approve",
     onSettled: (data, error) => {
@@ -146,7 +145,7 @@ const PurchaseEscrowPage: FC = () => {
       try {
         void approve({
           args: [
-            getContractAddress("SwapERC20Extension")!,
+            getContractAddress("SwapERC20Extension") ?? "0x",
             BigInt(data.details.A_counterAmount),
           ],
         });
@@ -154,10 +153,11 @@ const PurchaseEscrowPage: FC = () => {
         console.error(err);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, data]);
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-approve-tx",
     onSuccess: () => {
       if (state === "watch-approve-tx") {
@@ -191,7 +191,7 @@ const PurchaseEscrowPage: FC = () => {
   });
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-complete-tx",
     onSuccess: () => {
       if (state === "watch-complete-tx") {
@@ -226,7 +226,7 @@ const PurchaseEscrowPage: FC = () => {
   });
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-cancel-tx",
     onSuccess: () => {
       if (state === "watch-cancel-tx") {
@@ -262,6 +262,7 @@ const PurchaseEscrowPage: FC = () => {
         console.error(err);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, data]);
 
   useEffect(() => {
@@ -295,6 +296,7 @@ const PurchaseEscrowPage: FC = () => {
         console.error(error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (

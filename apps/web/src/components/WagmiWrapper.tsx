@@ -62,7 +62,7 @@ export const WagmiWrapper: FCC = ({ children }) => {
     if (localTheme === "dark" || localTheme === "light") {
       setTheme(localTheme);
     }
-  }, [hydrated]);
+  }, [hydrated, setTheme]);
 
   return (
     <>

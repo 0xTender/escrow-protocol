@@ -1,13 +1,5 @@
-import { FCC } from "@app/utils";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "./ui/card";
+import { type FCC } from "@app/utils";
+import { Card, CardHeader, CardContent } from "./ui/card";
 import { Plus, ShoppingBag, Tag } from "lucide-react";
 import Link from "next/link";
 import { api } from "@app/utils/api";

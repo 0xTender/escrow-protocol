@@ -3,7 +3,6 @@ import { type Dispatch, type FC, type SetStateAction, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -21,7 +20,7 @@ export const CounterAmount: FC<{
   const form = watch();
   useEffect(() => {
     setFocus("counterAmount");
-  }, []);
+  }, [setFocus]);
   return (
     <>
       <FormField

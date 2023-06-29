@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Dispatch, type FC, type SetStateAction, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -13,11 +14,11 @@ import { cn } from "@app/utils";
 export const Deadline: FC<{
   setActiveStep: Dispatch<SetStateAction<number>>;
 }> = ({}) => {
-  const { watch, formState, setFocus } = useFormContext();
+  const { watch, setFocus } = useFormContext();
   const form = watch();
   useEffect(() => {
     setFocus("deadline");
-  }, []);
+  }, [setFocus]);
   return (
     <>
       <FormField

@@ -65,7 +65,7 @@ export const useSwapERC20Create = () => {
       getContractAddress("Escrow") !== "0x" &&
       !!address &&
       state === "pre-read-allowance",
-    args: [address!, getContractAddress("SwapERC20Extension")!],
+    args: [address ?? "0x", getContractAddress("SwapERC20Extension")],
     onSuccess: () => {
       setState("read-allowance");
     },
@@ -91,7 +91,7 @@ export const useSwapERC20Create = () => {
   });
 
   const { write: beginEscrow } = useContractWrite({
-    address: getContractAddress("Escrow")!,
+    address: getContractAddress("Escrow"),
     abi: EscrowABI,
     functionName: "beginEscrow",
     onSettled: (data, error) => {
@@ -110,7 +110,7 @@ export const useSwapERC20Create = () => {
   });
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-approve-tx",
     onSuccess: () => {
       if (state === "watch-approve-tx") {
@@ -125,7 +125,7 @@ export const useSwapERC20Create = () => {
   });
 
   useWaitForTransaction({
-    hash: hash!,
+    hash: hash ?? "0x",
     enabled: hash !== undefined && state === "watch-begin-escrow-tx",
     onSuccess: () => {
       if (state === "watch-begin-escrow-tx") {
@@ -149,11 +149,12 @@ export const useSwapERC20Create = () => {
     if (data && state === "pre-approve") {
       void approve({
         args: [
-          getContractAddress("SwapERC20Extension")!,
+          getContractAddress("SwapERC20Extension"),
           parseEther(data.initiatorAmount),
         ],
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, data]);
 
   const { push } = useRouter();
@@ -196,7 +197,7 @@ export const useSwapERC20Create = () => {
               { type: "uint256" },
             ],
             [
-              address!,
+              address ?? "0x",
               data.counterParty,
               data.initiatorToken,
               parseEther(data.initiatorAmount),
@@ -212,6 +213,7 @@ export const useSwapERC20Create = () => {
     if (state === "completed") {
       void push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, data]);
 
   console.log({ data, state });

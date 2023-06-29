@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@app/server/api/trpc";
-import { AddressType, isAddr } from "@app/utils/web3";
+import { type AddressType, isAddr } from "@app/utils/web3";
 import { EscrowState, AgreementStatus } from "@app/types";
 import { TRPCError } from "@trpc/server";
 

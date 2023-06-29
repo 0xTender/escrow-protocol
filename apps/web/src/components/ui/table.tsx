@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { cn } from "@app/utils";
-import { Collapsible } from "./collapsible";
 
 const Table = React.forwardRef<
   HTMLTableElement,

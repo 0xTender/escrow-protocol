@@ -3,7 +3,7 @@ import { type AppType } from "next/app";
 import { api } from "@app/utils/api";
 
 import "@app/styles/globals.css";
-import { FCC } from "@app/utils";
+import { type FCC } from "@app/utils";
 import { ThemeProvider } from "@app/hooks/useTheme";
 import { useEffect, useState } from "react";
 import { WagmiWrapper } from "@app/components/WagmiWrapper";
