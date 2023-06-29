@@ -5,6 +5,18 @@ export enum EscrowState {
   CANCELLED,
 }
 
+export enum Extensions {
+  SwapERC20Extension = "SwapERC20Extension",
+  MultiSwapExtension = "MultiSwapExtension",
+}
+
+export enum ExchangeType {
+  ERC20,
+  ERC721,
+}
+
+export const ExchangeNames = ["ERC20", "ERC721"];
+
 export const getValueForEscrowState = (state: number) => {
   switch (state) {
     case EscrowState.NONE:
