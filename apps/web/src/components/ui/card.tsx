@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@app/utils";
+import { type FCC, cn } from "@app/utils";
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -76,7 +76,16 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
+const Gradient: FCC = ({ children }) => {
+  return (
+    <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-[#EBEBEB] to-[#F8F8F8] dark:from-[#313131] dark:to-[#2B2B2B]">
+      {children}
+    </div>
+  );
+};
+
 export {
+  Gradient,
   Card,
   CardHeader,
   CardFooter,

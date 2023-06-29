@@ -5,7 +5,7 @@ import Head from "next/head";
 import { cn } from "@app/utils";
 import { Create } from "@app/components/Create";
 
-const HomePage: NextPage = () => {
+const CreatePage: NextPage = () => {
   return (
     <>
       <Head>
@@ -20,4 +20,4 @@ const HomePage: NextPage = () => {
   );
 };
 
-export default HomePage;
+export default CreatePage;

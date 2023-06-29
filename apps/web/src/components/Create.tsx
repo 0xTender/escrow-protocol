@@ -1,20 +1,6 @@
-import {
-  swapERC20FormSchema,
-  useSwapERC20Create,
-} from "@app/hooks/interactions/useSwapERC20";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type Dispatch, type FC, type SetStateAction, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import { type z } from "zod";
-import { Form } from "./ui/form";
+import { type Dispatch, type FC, type SetStateAction } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, Gradient } from "./ui/card";
 
 import { CounterParty } from "./CreateStepper/CounterParty";
 import { InitiatorToken } from "./CreateStepper/InitiatorToken";
@@ -22,9 +8,9 @@ import { InitiatorAmount } from "./CreateStepper/InitiatorAmount";
 import { CounterToken } from "./CreateStepper/CounterToken";
 import { CounterAmount } from "./CreateStepper/CounterAmount";
 import { Deadline } from "./CreateStepper/Deadline";
-import { Button } from "./ui/button";
+import Link from "next/link";
 
-const FormStepper: FC<{
+export const FormStepper: FC<{
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }> = ({ activeStep, setActiveStep }) => {
@@ -53,60 +39,39 @@ const FormStepper: FC<{
 };
 
 export const Create: FC = () => {
-  const form = useForm<z.infer<typeof swapERC20FormSchema>>({
-    resolver: zodResolver(swapERC20FormSchema),
-    defaultValues: {},
-    mode: "all",
-  });
-  const [activeStep, setActiveStep] = useState(0);
-
-  const { setSwapData, error, initSwap } = useSwapERC20Create();
-
   return (
     <>
-      <Card className="py-4 dark:rounded-xl dark:bg-[#1B1B1B]">
-        <CardHeader>
-          <CardTitle className="text-center">Create an agreement</CardTitle>
-        </CardHeader>
-        <FormProvider {...form}>
-          <Form {...form}>
-            <form
-              className="space-y-8"
-              onSubmit={(e) => {
-                void form.handleSubmit((data) => {
-                  console.log(data);
+      <div className="flex flex-wrap justify-center gap-x-4 gap-y-4 p-8  md:justify-normal">
+        <Link href={"/create/SwapERC20Extension"}>
+          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] sm:w-80 md:w-60">
+            <CardHeader>
+              <div className="h-16 w-16 font-bold italic">
+                <Gradient>ERC20</Gradient>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="pr-4 font-mono text-sm font-medium">
+                SwapERC20
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
-                  if (activeStep === 5) {
-                    setSwapData(data);
-                    initSwap();
-                  }
-                })(e);
-              }}
-            >
-              <CardContent className="mx-auto py-2 sm:max-w-[80%]">
-                <FormStepper
-                  activeStep={activeStep}
-                  setActiveStep={setActiveStep}
-                />
-                {activeStep === 5 && (
-                  <div className="pt-4">
-                    <Button type="submit">Submit</Button>
-                  </div>
-                )}
-                <div className="py-2">Page {activeStep + 1} / Page 6</div>
-                <div></div>
-              </CardContent>
-            </form>
-          </Form>
-        </FormProvider>
-        {error && (
-          <CardFooter className="mx-auto break-words break-all sm:max-w-[80%]">
-            <div className="hyphens-auto text-red-400">
-              {error?.split("\n").slice(-2)?.[0] ?? error}
-            </div>
-          </CardFooter>
-        )}
-      </Card>
+        <Link href={"/create/MultiSwapExtension"}>
+          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] sm:w-80 md:w-60">
+            <CardHeader className="flex-row justify-between">
+              <div className="h-16  w-16 font-bold italic">
+                <Gradient>Multi</Gradient>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="pr-4 font-mono text-sm font-medium">
+                MultiSwap
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
     </>
   );
 };
