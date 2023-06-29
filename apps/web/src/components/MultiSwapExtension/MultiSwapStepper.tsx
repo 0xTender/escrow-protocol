@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { TokenSelector } from "./ERC20Selector";
 import { Button } from "@app/components/ui/button";
 import { CounterParty } from "@app/components/CreateStepper/CounterParty";
+import { Deadline } from "@app/components/CreateStepper/Deadline";
 
 export const MultiSwapStepper: FC<{
   activeStep: number;
@@ -26,11 +27,13 @@ export const MultiSwapStepper: FC<{
     }
   }, [activeStep, setFocus]);
 
+  console.log(form);
+
   return (
     <>
       {activeStep === 0 && (
         <div>
-          <div className="flex gap-2">
+          <div className="flex w-full gap-2">
             <CounterParty setActiveStep={setActiveStep}></CounterParty>
           </div>
         </div>
@@ -128,6 +131,13 @@ export const MultiSwapStepper: FC<{
               Next
             </Button>
           </div>
+        </>
+      )}
+
+      {activeStep === 3 && (
+        <>
+          <Deadline setActiveStep={setActiveStep}></Deadline>
+          <Button type="submit">Submit</Button>
         </>
       )}
     </>

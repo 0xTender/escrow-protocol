@@ -26,7 +26,7 @@ export const CounterParty: FC<{
       <FormField
         render={({ field }) => {
           return (
-            <FormItem className="pb-3 leading-tight">
+            <FormItem className="w-full pb-3 leading-tight">
               <FormLabel>Counter Party</FormLabel>
               <FormControl>
                 <Input

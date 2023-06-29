@@ -6,12 +6,14 @@ import {
   type AddressType,
   zAddr,
   isEtherWithGreaterThanZero,
+  getContractAddress,
 } from "@app/utils/web3";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { MultiSwapStepper } from "./MultiSwapStepper";
 import { Button } from "@app/components/ui/button";
+import { useAllowance } from "@app/hooks/useAllowance";
 
 export const multiSwapFormSchema = z.object({
   counterParty: z.custom<AddressType>(...zAddr),
@@ -35,7 +37,8 @@ export const multiSwapFormSchema = z.object({
 export const MultiSwapForm: FC<{
   initiatorExchange: ExchangeType;
   counterExchange: ExchangeType;
-}> = ({ initiatorExchange, counterExchange }) => {
+  setError: (error: string) => void;
+}> = ({ initiatorExchange, counterExchange, setError }) => {
   const form = useForm<z.infer<typeof multiSwapFormSchema>>({
     resolver: zodResolver(multiSwapFormSchema),
     defaultValues: {
@@ -45,6 +48,17 @@ export const MultiSwapForm: FC<{
     mode: "all",
   });
   const [activeStep, setActiveStep] = useState(0);
+
+  const { init, state: allowanceState } = useAllowance({
+    allowanceType: initiatorExchange,
+    amount: form.watch("initiatorAmount") ?? "0",
+    spenderAddress: getContractAddress("SwapERC20Extension") ?? "0x",
+    tokenAddress: form.watch("initiatorToken") ?? "0x",
+    setError: (error) => {
+      setError(error);
+    },
+  });
+  console.log(allowanceState);
 
   return (
     <>
@@ -68,6 +82,9 @@ export const MultiSwapForm: FC<{
               onSubmit={(e) => {
                 void form.handleSubmit((data) => {
                   console.log(data);
+                  if (allowanceState !== "none") {
+                    init();
+                  }
                 })(e);
               }}
             >

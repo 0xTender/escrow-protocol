@@ -26,7 +26,7 @@ export const Deadline: FC<{
         name="deadline"
         render={({ field }) => {
           return (
-            <FormItem className="flex flex-col">
+            <FormItem className="flex w-full flex-col">
               <FormLabel>Deadline</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

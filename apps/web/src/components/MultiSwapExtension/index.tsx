@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -56,6 +57,8 @@ export const MultiSwapExtension: FC = () => {
     counterExchange: ExchangeType;
   }>();
 
+  const [error, setError] = useState<string>();
+
   return (
     <>
       <Card className="py-4 dark:rounded-xl dark:bg-[#1B1B1B]">
@@ -77,7 +80,10 @@ export const MultiSwapExtension: FC = () => {
                 <MoveLeft></MoveLeft>
                 <div>Go Back</div>
               </div>
-              <MultiSwapForm {...exchanges}></MultiSwapForm>
+              <MultiSwapForm
+                setError={(error: string) => setError(error)}
+                {...exchanges}
+              ></MultiSwapForm>
             </>
           ) : (
             <>
@@ -129,6 +135,13 @@ export const MultiSwapExtension: FC = () => {
             </>
           )}{" "}
         </CardContent>
+        {error && (
+          <CardFooter className="max-w-full break-words break-all">
+            <div className="hyphens-auto text-red-400">
+              {error?.split("\n").slice(-2)?.[0] ?? error}
+            </div>
+          </CardFooter>
+        )}
       </Card>
     </>
   );
