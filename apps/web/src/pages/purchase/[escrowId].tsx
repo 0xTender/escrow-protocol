@@ -91,7 +91,7 @@ const PurchaseEscrowPage: FC = () => {
     }
   }, [address, data, state]);
 
-  const { data: escrowState } = useContractRead({
+  const { data: escrowState, refetch: refetchEscrowState } = useContractRead({
     abi: EscrowABI,
     address: getContractAddress("Escrow"),
     functionName: "escrowState",
@@ -116,7 +116,7 @@ const PurchaseEscrowPage: FC = () => {
     },
   });
 
-  const { writeAsync: approve } = useContractWrite({
+  const { write: approve } = useContractWrite({
     address: (data?.details.A_counterToken as any) ?? "0x",
     abi: ERC20ABI,
     functionName: "approve",
@@ -170,7 +170,7 @@ const PurchaseEscrowPage: FC = () => {
     },
   });
 
-  const { writeAsync: completeEscrow } = useContractWrite({
+  const { write: completeEscrow } = useContractWrite({
     address: getContractAddress("Escrow"),
     abi: EscrowABI,
     functionName: "completeEscrow",
@@ -195,6 +195,42 @@ const PurchaseEscrowPage: FC = () => {
     onSuccess: () => {
       if (state === "watch-complete-tx") {
         setState("none");
+        refetchEscrowState();
+      }
+    },
+    onError(error) {
+      console.log(error);
+      setError(error.message);
+      setState("none");
+    },
+  });
+
+  const { write: cancelEscrow } = useContractWrite({
+    address: getContractAddress("Escrow"),
+    abi: EscrowABI,
+    functionName: "cancelEscrow",
+    onSettled: (data, error) => {
+      if (error) {
+        console.error(error);
+        setError(error.message);
+        setState("none");
+        return;
+      }
+
+      if (data) {
+        setState("watch-cancel-tx");
+        setHash(data.hash);
+      }
+    },
+  });
+
+  useWaitForTransaction({
+    hash: hash!,
+    enabled: hash !== undefined && state === "watch-cancel-tx",
+    onSuccess: () => {
+      if (state === "watch-cancel-tx") {
+        setState("none");
+        refetchEscrowState();
       }
     },
     onError(error) {
@@ -215,7 +251,10 @@ const PurchaseEscrowPage: FC = () => {
         void completeEscrow({
           args: [
             BigInt(data.details.A_escrowId),
-            encodeAbiParameters([{ type: "uint256" }], [BigInt(1)]),
+            encodeAbiParameters(
+              [{ type: "uint256" }],
+              [BigInt(data.details.A_escrowId)]
+            ),
           ],
         });
       } catch (err) {
@@ -239,9 +278,23 @@ const PurchaseEscrowPage: FC = () => {
         setState("pre-approve");
       }
     }
-  }, [state]);
 
-  console.log({ state, counterAllowance });
+    if (state === "pre-cancel") {
+      try {
+        void cancelEscrow({
+          args: [
+            BigInt(data.details.A_escrowId),
+            encodeAbiParameters(
+              [{ type: "uint256" }],
+              [BigInt(data.details.A_escrowId)]
+            ),
+          ],
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [state]);
 
   return (
     <div>
