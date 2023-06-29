@@ -8,9 +8,9 @@ export const MultiSwapStepper: FC<{
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
 }> = ({ activeStep }) => {
-  const { watch, formState } =
-    useFormContext<z.infer<typeof multiSwapFormSchema>>();
+  const { watch } = useFormContext<z.infer<typeof multiSwapFormSchema>>();
   const form = watch();
+
   return (
     <>
       {activeStep === 0 && (
@@ -21,8 +21,16 @@ export const MultiSwapStepper: FC<{
               token: "initiatorToken",
             }}
             exchange={form.initiatorExchange}
-            label={"Token you will send."}
-            placeholder={"0.0"}
+            token={{
+              label: "Initiator Token",
+              description: "Token you will send.",
+              placeholder: "0x...",
+            }}
+            amount={{
+              label: "Initiator Amount",
+              description: "Token amount you will send.",
+              placeholder: "0.0",
+            }}
           ></TokenSelector>
         </>
       )}
