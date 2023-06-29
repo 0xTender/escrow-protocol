@@ -50,6 +50,7 @@ export const useSwapERC20Create = () => {
   const [state, setState] = useState<MachineState>();
   const { address } = useAccount();
 
+  const [error, setError] = useState<string>();
   const [hash, setHash] = useState<AddressType>();
 
   const {
@@ -71,13 +72,15 @@ export const useSwapERC20Create = () => {
     },
   });
 
-  const { writeAsync: approve } = useContractWrite({
+  const { write: approve } = useContractWrite({
     address: data?.initiatorToken ?? "0x",
     abi: ERC20ABI,
     functionName: "approve",
     onSettled: (data, error) => {
       if (error) {
         console.error(error);
+        setError(error.message);
+        setState("none");
         return;
       }
 
@@ -88,13 +91,15 @@ export const useSwapERC20Create = () => {
     },
   });
 
-  const { writeAsync: beginEscrow } = useContractWrite({
+  const { write: beginEscrow } = useContractWrite({
     address: getContractAddress("Escrow")!,
     abi: EscrowABI,
     functionName: "beginEscrow",
     onSettled: (data, error) => {
       if (error) {
         console.error(error);
+        setError(error.message);
+        setState("none");
         return;
       }
 
@@ -113,6 +118,11 @@ export const useSwapERC20Create = () => {
         setState("pre-begin-escrow");
       }
     },
+    onError(error) {
+      console.error(error);
+      setError(error.message);
+      setState("none");
+    },
   });
 
   useWaitForTransaction({
@@ -122,6 +132,11 @@ export const useSwapERC20Create = () => {
       if (state === "watch-begin-escrow-tx") {
         setState("completed");
       }
+    },
+    onError(error) {
+      console.error(error);
+      setError(error.message);
+      setState("none");
     },
   });
 
@@ -154,10 +169,6 @@ export const useSwapERC20Create = () => {
   useEffect(() => {
     if (!data) {
       return;
-    }
-
-    if (state === "none") {
-      setState("pre-read-allowance");
     }
 
     if (state === "read-allowance") {
@@ -211,5 +222,7 @@ export const useSwapERC20Create = () => {
     isFetchingAllowance,
     isFetchedAllowance,
     initiatorAllowance,
+    error,
+    initSwap: () => setState("pre-read-allowance"),
   };
 };

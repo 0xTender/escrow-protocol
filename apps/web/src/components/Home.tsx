@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
     <>
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-4 p-8  md:justify-normal">
         <Link href={"/create"}>
-          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] md:w-60">
+          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] sm:w-80 md:w-60">
             <CardHeader>
               <div className="h-12 w-12">
                 <Gradient>
@@ -53,7 +53,7 @@ export const Home: React.FC = () => {
           </Card>
         </Link>
         <Link href={"/sale"}>
-          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] md:w-60">
+          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] sm:w-80 md:w-60">
             <CardHeader className="flex-row justify-between">
               <div className="h-12 w-12">
                 <Gradient>
@@ -71,7 +71,7 @@ export const Home: React.FC = () => {
         </Link>
 
         <Link href={"/purchase"}>
-          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] md:w-60">
+          <Card className="w-64 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] sm:w-80 md:w-60">
             <CardHeader className="flex-row justify-between">
               <div className="h-12 w-12">
                 <Gradient>
