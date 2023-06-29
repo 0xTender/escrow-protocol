@@ -1,6 +1,6 @@
 // generate context for theme
 
-import { Dispatch, SetStateAction, createContext } from "react";
+import { type Dispatch, type SetStateAction, createContext } from "react";
 
 export type ThemeContextType = {
   theme: "dark" | "light" | undefined;
@@ -9,7 +9,9 @@ export type ThemeContextType = {
 
 export const ThemeContext = createContext<ThemeContextType>({
   theme: "dark",
-  setTheme: () => {},
+  setTheme: () => {
+    // do nothing
+  },
 });
 
 export const ThemeProvider = ThemeContext.Provider;

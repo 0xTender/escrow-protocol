@@ -7,7 +7,7 @@ import { buttonVariants } from "@app/components/ui/button";
 import { Input } from "./input";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  handleChange: any;
+  handleChange: (e: Date) => void;
 };
 
 function Calendar({
@@ -84,7 +84,6 @@ function Calendar({
                   hours,
                   minutes
                 );
-                console.log({ newSelectedDate, handleChange });
                 setTimeValue(time);
                 handleChange(newSelectedDate);
               }}

@@ -2,8 +2,9 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "build": "turbo run build",
+    "start": "dotenv -- turbo run start",
     "dev": "dotenv -- turbo run dev",
+    "build": "dotenv -- turbo run build",
     "start:container": "dotenv -- docker-compose up -d",
     "wait-for-port": "dotenv -- pnpm --filter core run wait-for-port",
     "deploy-local:contracts": "dotenv -- pnpm --filter core run deploy-local:contracts",
@@ -27,5 +28,10 @@
     "wait-port": "^1.0.4"
   },
   "packageManager": "pnpm@7.15.0",
-  "name": "web-suite-turbo"
+  "name": "web-suite-turbo",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "eslint-plugin-react": "^7.32.2"
+  }
 }

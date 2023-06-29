@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Badge } from "@app/components/ui/badge";
 import { Button } from "@app/components/ui/button";
 import {
@@ -6,13 +7,11 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@app/components/ui/card";
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
-import { ERC20ABI } from "@app/utils/interfaces/IERC20ABI";
 import {
-  AddressType,
+  type AddressType,
   getContractAddress,
   shortenAddress,
 } from "@app/utils/web3";
@@ -20,7 +19,7 @@ import { EscrowABI } from "@root/core";
 import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { encodeAbiParameters, formatEther, parseEther } from "viem";
 import {
   useAccount,
@@ -103,8 +102,6 @@ const PurchaseEscrowPage: FC = () => {
 
   const [hash, setHash] = useState<AddressType>();
 
-  useEffect(() => {}, [state, data]);
-
   const { write: cancelEscrow } = useContractWrite({
     address: getContractAddress("Escrow"),
     abi: EscrowABI,
@@ -130,7 +127,7 @@ const PurchaseEscrowPage: FC = () => {
     onSuccess: () => {
       if (state === "watch-cancel-tx") {
         setState("none");
-        refetchEscrowState();
+        void refetchEscrowState();
       }
     },
     onError(error) {

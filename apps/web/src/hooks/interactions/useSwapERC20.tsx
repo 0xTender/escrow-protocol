@@ -1,7 +1,6 @@
 import {
-  isAddr,
   isEtherWithGreaterThanZero,
-  AddressType,
+  type AddressType,
   zAddr,
 } from "@app/utils/web3";
 import { useEffect, useState } from "react";
@@ -203,7 +202,7 @@ export const useSwapERC20Create = () => {
               parseEther(data.initiatorAmount),
               data.counterToken,
               parseEther(data.counterAmount),
-              Math.floor(data.deadline.getTime() / 1000),
+              BigInt(Math.floor(data.deadline.getTime() / 1000)),
             ]
           ),
         ],
@@ -211,7 +210,7 @@ export const useSwapERC20Create = () => {
     }
 
     if (state === "completed") {
-      push("/");
+      void push("/");
     }
   }, [state, data]);
 

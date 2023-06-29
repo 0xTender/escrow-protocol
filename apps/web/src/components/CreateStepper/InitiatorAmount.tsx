@@ -1,4 +1,5 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { type Dispatch, type FC, type SetStateAction, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import {

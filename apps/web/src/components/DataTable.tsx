@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { E_SwapStateChanged_SwapERC20Extension } from "@prisma/client";
+import type { E_SwapStateChanged_SwapERC20Extension } from "@prisma/client";
 
 import {
   Table,
@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@app/components/ui/table";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { AgreementStatus } from "@app/types";
 import { Badge } from "@app/components/ui/badge";
 import { secondsToString } from "@app/utils/date";
@@ -52,8 +52,9 @@ export const columns: (typeData: "purchase" | "sale") => ColumnDef<
     header: "Status",
     cell: ({ row }) => {
       const status: string = row.getValue("status");
+      const escrowId: string = row.getValue("A_escrowId");
       return (
-        <Link href={`/${typeData}/` + row.getValue("A_escrowId")}>
+        <Link href={`/${typeData}/${escrowId}`}>
           <Badge className={`${getColor(status)}`}>{status}</Badge>
         </Link>
       );

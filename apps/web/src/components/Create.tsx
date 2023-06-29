@@ -3,9 +3,9 @@ import {
   useSwapERC20Create,
 } from "@app/hooks/interactions/useSwapERC20";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, FC, SetStateAction, useState } from "react";
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { z } from "zod";
+import { type Dispatch, type FC, type SetStateAction, useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { type z } from "zod";
 import { Form } from "./ui/form";
 
 import {
@@ -73,7 +73,7 @@ export const Create: FC = () => {
             <form
               className="space-y-8"
               onSubmit={(e) => {
-                form.handleSubmit((data) => {
+                void form.handleSubmit((data) => {
                   console.log(data);
 
                   if (activeStep === 5) {

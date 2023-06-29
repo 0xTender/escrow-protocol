@@ -1,4 +1,5 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { type Dispatch, type FC, type SetStateAction, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
@@ -11,7 +12,7 @@ import { cn } from "@app/utils";
 
 export const Deadline: FC<{
   setActiveStep: Dispatch<SetStateAction<number>>;
-}> = ({ setActiveStep }) => {
+}> = ({}) => {
   const { watch, formState, setFocus } = useFormContext();
   const form = watch();
   useEffect(() => {
@@ -37,6 +38,7 @@ export const Deadline: FC<{
                       )}
                     >
                       {field.value ? (
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                         format(field.value, "PPP")
                       ) : (
                         <span>Pick a date</span>

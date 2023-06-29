@@ -9,13 +9,19 @@ export function shortenAddress(address: string | AddressType) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export const getContractAddress = (
+export const getContractAddress: (
   name: keyof (typeof addresses)[keyof typeof addresses]
-) => {
-  return (addresses as any)[env.NEXT_PUBLIC_CHAIN_ID.toString()][name];
+) => `0x${string}` = (name) => {
+  const chainId: string = env.NEXT_PUBLIC_CHAIN_ID.toString();
+  const parsedChainId = z.enum(["1337"]).parse(chainId);
+  const returnAddress = z
+    .custom<AddressType>()
+    .parse(addresses[parsedChainId][name]);
+  return returnAddress;
 };
 
 export const zAddr = [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (val: any) => {
     if (typeof val === "string" && val.startsWith("0x") && isAddress(val)) {
       return true;
@@ -41,7 +47,7 @@ export const isEtherWithGreaterThanZero = (
   greaterThanZero = true
 ) => {
   try {
-    let x = parseEther(e);
+    const x = parseEther(e);
     if (greaterThanZero && x === 0n) {
       return false;
     }
