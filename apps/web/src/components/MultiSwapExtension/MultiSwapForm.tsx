@@ -14,6 +14,7 @@ import { Form } from "../ui/form";
 import { MultiSwapStepper } from "./MultiSwapStepper";
 import { useAllowance } from "@app/hooks/useAllowance";
 import { useBeginEscrow } from "@app/hooks/useBeginEscrow";
+import { useRouter } from "next/router";
 
 export const multiSwapFormSchema = z.object({
   counterParty: z.custom<AddressType>(...zAddr),
@@ -72,6 +73,13 @@ export const MultiSwapForm: FC<{
       beginEscrow();
     }
   }, [allowanceState, beginEscrow, beginEscrowState]);
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (beginEscrowState === "complete") {
+      void push("/");
+    }
+  }, [push, beginEscrowState]);
 
   return (
     <>

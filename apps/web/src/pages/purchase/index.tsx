@@ -25,11 +25,14 @@ const SalePage: NextPage = () => {
         <link rel="icon" href="/logo.png" />
       </Head>
       <div className={cn("bg-background text-foreground")}>
-        <Link href="/sale">
-          <p className="my-2 text-sm text-muted-foreground underline">
-            View Sale Agreements
-          </p>
-        </Link>
+        <div className="flex items-center justify-between">
+          <h1 className="px-2 text-lg">Purchase Agreements</h1>
+          <Link href="/sale">
+            <p className="my-2 text-sm text-muted-foreground underline">
+              View Sale Agreements
+            </p>
+          </Link>
+        </div>
         {data && (
           <>
             <DataTable

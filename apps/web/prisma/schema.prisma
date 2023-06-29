@@ -72,6 +72,12 @@ model Event_pm {
   E_Transfer_TestNFT E_Transfer_TestNFT[]
 
   E_Unpaused_TestNFT E_Unpaused_TestNFT[]
+
+  E_EscrowAddressUpdated_MultiSwapExtension E_EscrowAddressUpdated_MultiSwapExtension[]
+
+  E_OwnershipTransferred_MultiSwapExtension E_OwnershipTransferred_MultiSwapExtension[]
+
+  E_SwapStateChanged_MultiSwapExtension E_SwapStateChanged_MultiSwapExtension[]
 }
 
 model E_EscrowExtensionUpdated_Escrow {
@@ -335,6 +341,61 @@ model E_Unpaused_TestNFT {
   eventId  String   @unique
 
   A_account String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_EscrowAddressUpdated_MultiSwapExtension {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_escrowAddress String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_OwnershipTransferred_MultiSwapExtension {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_previousOwner String @db.VarChar(1000)
+
+  A_newOwner String @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model E_SwapStateChanged_MultiSwapExtension {
+  id       Int      @id @default(autoincrement())
+  Event_pm Event_pm @relation(fields: [eventId], references: [id])
+  eventId  String   @unique
+
+  A_escrowId String @db.VarChar(1000)
+
+  A_initiator String @db.VarChar(1000)
+
+  A_counter String @db.VarChar(1000)
+
+  A_initiatorToken String @db.VarChar(1000)
+
+  A_initiatorAmount String @db.VarChar(1000)
+
+  A_counterToken String @db.VarChar(1000)
+
+  A_counterAmount String @db.VarChar(1000)
+
+  A_deadline String @db.VarChar(1000)
+
+  A_state String @db.VarChar(1000)
+
+  A_initiatorExchange String @db.VarChar(1000)
+
+  A_counterExchange String @db.VarChar(1000)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -23,5 +23,10 @@
     "name": "TestNFT",
     "path": "./packages/core/deployments/localhost/TestNFT.json",
     "rpc": "http://127.0.0.1:8545/"
+  },
+  {
+    "name": "MultiSwapExtension",
+    "path": "./packages/core/deployments/localhost/MultiSwapExtension.json",
+    "rpc": "http://127.0.0.1:8545/"
   }
 ]

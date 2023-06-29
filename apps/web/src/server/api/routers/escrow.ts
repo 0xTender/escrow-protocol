@@ -26,12 +26,18 @@ export const escrowRouter = createTRPCRouter({
             A_escrowState: `${EscrowState.BEGUN}`,
           },
         }),
-        ctx.prisma.e_SwapStateChanged_SwapERC20Extension.count({
+        (await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.count({
           where: {
             A_counter: input.address,
             A_state: `${EscrowState.BEGUN}`,
           },
-        }),
+        })) +
+          (await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.count({
+            where: {
+              A_counter: input.address,
+              A_state: `${EscrowState.BEGUN}`,
+            },
+          })),
       ]);
 
       return instances;
@@ -61,9 +67,20 @@ export const escrowRouter = createTRPCRouter({
           },
         });
 
+      const multiSwap =
+        await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.findMany({
+          where: {
+            A_counter: input.address,
+            A_state: `${EscrowState.BEGUN}`,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
       const tokenAddresses = Array.from(
         new Set(
-          swapERC20
+          [...swapERC20, ...multiSwap]
             .map((e) => [e.A_initiatorToken, e.A_counterToken])
             .reduce((acc, val) => acc.concat(val), [])
         )
@@ -88,7 +105,7 @@ export const escrowRouter = createTRPCRouter({
 
       // check if cancelled
       const instances = await Promise.all(
-        swapERC20.map(async (e) => {
+        [...swapERC20, ...multiSwap].map(async (e) => {
           if (parseInt(e.A_deadline) * 1000 < Date.now()) {
             return { ...e, status: AgreementStatus["Expired"] };
           }
@@ -148,12 +165,27 @@ export const escrowRouter = createTRPCRouter({
             createdAt: "desc",
           },
         });
+      const multiSwap =
+        await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.findMany({
+          where: {
+            A_initiator: input.address,
+            A_state: `${EscrowState.BEGUN}`,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
 
       const tokenAddresses = Array.from(
         new Set(
           swapERC20
             .map((e) => [e.A_initiatorToken, e.A_counterToken])
             .reduce((acc, val) => acc.concat(val), [])
+            .concat(
+              multiSwap
+                .map((e) => [e.A_initiatorToken, e.A_counterToken])
+                .reduce((acc, val) => acc.concat(val), [])
+            )
         )
       );
 
@@ -176,7 +208,7 @@ export const escrowRouter = createTRPCRouter({
 
       // check if cancelled
       const instances = await Promise.all(
-        swapERC20.map(async (e) => {
+        [...swapERC20, ...multiSwap].map(async (e) => {
           if (parseInt(e.A_deadline) * 1000 < Date.now()) {
             return { ...e, status: AgreementStatus["Expired"] };
           }
@@ -235,8 +267,24 @@ export const escrowRouter = createTRPCRouter({
 
       if (extensionName?.name === "SwapERC20Extension") {
         return {
+          extensionName: "SwapERC20Extension",
           details:
             await prisma.e_SwapStateChanged_SwapERC20Extension.findFirstOrThrow(
+              {
+                where: {
+                  A_escrowId: input.escrowId,
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+              }
+            ),
+        };
+      } else if (extensionName?.name === "MultiSwapExtension") {
+        return {
+          extensionName: "MultiSwapExtension",
+          details:
+            await prisma.e_SwapStateChanged_MultiSwapExtension.findFirstOrThrow(
               {
                 where: {
                   A_escrowId: input.escrowId,

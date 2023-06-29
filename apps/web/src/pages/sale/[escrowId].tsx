@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@app/components/ui/card";
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
@@ -169,6 +170,9 @@ const PurchaseEscrowPage: FC = () => {
       </Head>{" "}
       <Card className="dark:rounded-xl dark:bg-[#1B1B1B]">
         <CardHeader>
+          <CardTitle className="text-md">
+            Extension: {data?.extensionName && <>{data.extensionName}</>}
+          </CardTitle>
           <CardDescription className="flex gap-x-2">
             Agreement Id: {data && escrowId}
             {state === "expired" ? (
