@@ -15,6 +15,7 @@ import { z } from "zod";
 import { useFormContext } from "react-hook-form";
 import { AddressType } from "@app/utils/web3";
 import { Badge } from "../ui/badge";
+import { Button } from "@app/components/ui/button";
 
 export const TokenSelector: FC<{
   values:
@@ -36,7 +37,7 @@ export const TokenSelector: FC<{
 
   return (
     <span>
-      {exchange === ExchangeType.ERC20 && data && (
+      {data && (
         <div className="flex gap-x-4 p-4 text-xs">
           Select from these:{" "}
           {data.map((token, idx) => {
