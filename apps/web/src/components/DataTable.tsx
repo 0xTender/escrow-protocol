@@ -59,10 +59,14 @@ export const columns: (typeData: "purchase" | "sale") => ColumnDef<
       );
     },
   },
-  {
-    header: "From",
-    accessorFn: (data) => data.A_initiator,
-  },
+  ...[
+    typeData === "purchase"
+      ? {
+          header: "From",
+          accessorKey: "A_initiator",
+        }
+      : { header: "To", accessorKey: "A_counter" },
+  ],
   {
     accessorKey: "counterTokenName",
     header: "Token Requested",
