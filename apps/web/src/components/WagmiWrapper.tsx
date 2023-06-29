@@ -58,10 +58,9 @@ export const WagmiWrapper: FCC = ({ children }) => {
       return;
     }
     const localTheme = localStorage.getItem("theme");
-    console.log({ localTheme });
     if (localTheme === "dark" || localTheme === "light") {
       setTheme(localTheme);
-    }
+    } else setTheme("dark");
   }, [hydrated, setTheme]);
 
   return (

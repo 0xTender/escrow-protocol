@@ -5,10 +5,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Gradient,
 } from "../ui/card";
+import { Gradient } from "../ui/gradient";
 import { ExchangeNames, ExchangeType } from "@app/types";
 import { cn } from "@app/utils";
+import { MultiSwapForm } from "./MultiSwapForm";
+import { MoveLeft } from "lucide-react";
 
 const InnerCard: FC<
   {
@@ -19,7 +21,7 @@ const InnerCard: FC<
   return (
     <Card
       className={cn(
-        "w-80 cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B]",
+        "min-w-[16rem] cursor-pointer rounded-none dark:rounded-xl dark:bg-[#1B1B1B] md:w-[32%]",
         props.className
       )}
       {...props}
@@ -50,9 +52,9 @@ const InnerCard: FC<
 
 export const MultiSwapExtension: FC = () => {
   const [exchanges, setExchanges] = useState<{
-    initiatorExchange?: ExchangeType;
-    counterExchange?: ExchangeType;
-  }>({});
+    initiatorExchange: ExchangeType;
+    counterExchange: ExchangeType;
+  }>();
 
   return (
     <>
@@ -66,51 +68,66 @@ export const MultiSwapExtension: FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-8 p-8  md:justify-between">
-            <InnerCard
-              onClick={() => {
-                setExchanges({
-                  initiatorExchange: ExchangeType.ERC20,
-                  counterExchange: ExchangeType.ERC20,
-                });
-              }}
-              initiatorExchange={ExchangeType.ERC20}
-              counterExchange={ExchangeType.ERC20}
-            />
+          {exchanges ? (
+            <>
+              <div
+                className="flex cursor-pointer items-center space-x-2 pb-4 font-mono text-xs"
+                onClick={() => setExchanges(undefined)}
+              >
+                <MoveLeft></MoveLeft>
+                <div>Go Back</div>
+              </div>
+              <MultiSwapForm {...exchanges}></MultiSwapForm>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-8 p-8  md:justify-normal">
+                <InnerCard
+                  onClick={() => {
+                    setExchanges({
+                      initiatorExchange: ExchangeType.ERC20,
+                      counterExchange: ExchangeType.ERC20,
+                    });
+                  }}
+                  initiatorExchange={ExchangeType.ERC20}
+                  counterExchange={ExchangeType.ERC20}
+                />
 
-            <InnerCard
-              onClick={() => {
-                setExchanges({
-                  initiatorExchange: ExchangeType.ERC20,
-                  counterExchange: ExchangeType.ERC721,
-                });
-              }}
-              initiatorExchange={ExchangeType.ERC20}
-              counterExchange={ExchangeType.ERC721}
-            />
+                <InnerCard
+                  onClick={() => {
+                    setExchanges({
+                      initiatorExchange: ExchangeType.ERC20,
+                      counterExchange: ExchangeType.ERC721,
+                    });
+                  }}
+                  initiatorExchange={ExchangeType.ERC20}
+                  counterExchange={ExchangeType.ERC721}
+                />
 
-            <InnerCard
-              onClick={() => {
-                setExchanges({
-                  initiatorExchange: ExchangeType.ERC721,
-                  counterExchange: ExchangeType.ERC20,
-                });
-              }}
-              initiatorExchange={ExchangeType.ERC721}
-              counterExchange={ExchangeType.ERC20}
-            />
+                <InnerCard
+                  onClick={() => {
+                    setExchanges({
+                      initiatorExchange: ExchangeType.ERC721,
+                      counterExchange: ExchangeType.ERC20,
+                    });
+                  }}
+                  initiatorExchange={ExchangeType.ERC721}
+                  counterExchange={ExchangeType.ERC20}
+                />
 
-            <InnerCard
-              onClick={() => {
-                setExchanges({
-                  initiatorExchange: ExchangeType.ERC721,
-                  counterExchange: ExchangeType.ERC721,
-                });
-              }}
-              initiatorExchange={ExchangeType.ERC721}
-              counterExchange={ExchangeType.ERC721}
-            />
-          </div>
+                <InnerCard
+                  onClick={() => {
+                    setExchanges({
+                      initiatorExchange: ExchangeType.ERC721,
+                      counterExchange: ExchangeType.ERC721,
+                    });
+                  }}
+                  initiatorExchange={ExchangeType.ERC721}
+                  counterExchange={ExchangeType.ERC721}
+                />
+              </div>
+            </>
+          )}{" "}
         </CardContent>
       </Card>
     </>

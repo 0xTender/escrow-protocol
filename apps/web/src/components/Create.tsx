@@ -1,6 +1,7 @@
 import { type Dispatch, type FC, type SetStateAction } from "react";
 
-import { Card, CardContent, CardHeader, Gradient } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Gradient } from "./ui/gradient";
 
 import { CounterParty } from "./CreateStepper/CounterParty";
 import { InitiatorToken } from "./CreateStepper/InitiatorToken";

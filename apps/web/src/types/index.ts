@@ -15,7 +15,7 @@ export enum ExchangeType {
   ERC721,
 }
 
-export const ExchangeNames = ["ERC20", "ERC721"];
+export const ExchangeNames = ["ERC20", "ERC721"] as const;
 
 export const getValueForEscrowState = (state: number) => {
   switch (state) {
