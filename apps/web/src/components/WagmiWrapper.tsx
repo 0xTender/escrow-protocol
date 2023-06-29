@@ -77,7 +77,7 @@ export const WagmiWrapper: FCC = ({ children }) => {
               <div className="gap-4">
                 <div className="flex items-center space-x-2">
                   <Button
-                    className="rounded-none"
+                    className={"rounded-none dark:rounded-lg"}
                     onClick={() => {
                       open().catch(console.error);
                     }}
@@ -89,6 +89,7 @@ export const WagmiWrapper: FCC = ({ children }) => {
                     )}
                   </Button>
                   <Button
+                    className="rounded-none dark:rounded-lg"
                     onClick={() => {
                       if (theme === "dark") {
                         return setTheme("light");

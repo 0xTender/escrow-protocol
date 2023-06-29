@@ -31,19 +31,20 @@ import {
   CollapsibleTrigger,
 } from "@app/components/ui/collapsible";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
+import Link from "next/link";
 
 const getColor = (status: string) => {
   switch (status) {
     case AgreementStatus.Active:
-      return "bg-green-400 hover:bg-green-500";
+      return "dark:bg-green-500 bg-green-400 hover:bg-green-500";
     case AgreementStatus.Expired:
-      return "bg-red-400 hover:bg-red-400";
+      return "dark:bg-red-500 bg-red-400 hover:bg-red-400";
     case AgreementStatus.Cancelled:
-      return "bg-red-400 hover:bg-red-400";
+      return "dark:bg-red-500 bg-red-400 hover:bg-red-400";
     case AgreementStatus.Completed:
-      return "bg-blue-400 hover:bg-blue-400";
+      return "dark:bg-blue-500 bg-blue-400 hover:bg-blue-400";
     default:
-      return "bg-gray-400";
+      return "dark:bg-gray-500 bg-gray-400";
   }
 };
 
@@ -55,11 +56,19 @@ export const columns: ColumnDef<
   }
 >[] = [
   {
+    accessorKey: "A_escrowId",
+    header: "Agreement ID",
+  },
+  {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => {
+    cell: ({ row, getValue }) => {
       const status: string = row.getValue("status");
-      return <Badge className={`${getColor(status)}`}>{status}</Badge>;
+      return (
+        <Link href={"/purchase/" + row.getValue("A_escrowId")}>
+          <Badge className={`${getColor(status)}`}>{status}</Badge>
+        </Link>
+      );
     },
   },
   {
