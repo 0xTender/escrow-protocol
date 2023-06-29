@@ -4,29 +4,44 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@app/components/ui/card";
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
-import { getContractAddress, shortenAddress } from "@app/utils/web3";
+import { ERC20ABI } from "@app/utils/interfaces/IERC20ABI";
+import {
+  AddressType,
+  getContractAddress,
+  shortenAddress,
+} from "@app/utils/web3";
 import { EscrowABI } from "@root/core";
 import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import { formatEther, parseEther } from "viem";
-import { useAccount, useContractRead } from "wagmi";
+import { encodeAbiParameters, formatEther, parseEther } from "viem";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 
 type StateMachine =
+  | "pre-read-allowance"
+  | "read-allowance"
   | "pre-approve"
   | "approve"
   | "watch-approve-tx"
-  | "pre-complete"
-  | "complete"
+  //
+  | "pre-complete-escrow"
+  | "complete-escrow"
   | "watch-complete-tx"
   | "expired"
   | "none"
+  //
   | "pre-cancel"
   | "cancel"
   | "watch-cancel-tx";
@@ -47,10 +62,10 @@ const getColor = (status: number) => {
 const PurchaseEscrowPage: FC = () => {
   const [state, setState] = useState<StateMachine>("none");
   const router = useRouter();
-
   const { escrowId: escrowIdQuery } = router.query;
-
   const [escrowId, setEscrowId] = useState<string>();
+
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     setEscrowId(escrowIdQuery as string);
@@ -84,7 +99,149 @@ const PurchaseEscrowPage: FC = () => {
     enabled: !!data?.details.A_escrowId,
   });
 
-  console.log(escrowState);
+  const [hash, setHash] = useState<AddressType>();
+
+  const { data: counterAllowance } = useContractRead({
+    address: (data?.details.A_counterToken as any) ?? "0x",
+    abi: ERC20ABI,
+    functionName: "allowance",
+    enabled:
+      !!data?.details.A_counterToken &&
+      getContractAddress("Escrow") !== "0x" &&
+      !!address &&
+      state === "pre-read-allowance",
+    args: [address!, getContractAddress("SwapERC20Extension")!],
+    onSuccess: () => {
+      setState("read-allowance");
+    },
+  });
+
+  const { writeAsync: approve } = useContractWrite({
+    address: (data?.details.A_counterToken as any) ?? "0x",
+    abi: ERC20ABI,
+    functionName: "approve",
+    onSettled: (data, error) => {
+      if (error) {
+        console.error(error);
+        setError(error.message);
+        setState("none");
+        return;
+      }
+
+      if (data) {
+        setState("watch-approve-tx");
+        setHash(data.hash);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (state !== "pre-approve" || data === undefined) {
+      return;
+    }
+    if (state === "pre-approve") {
+      setState("approve");
+
+      try {
+        void approve({
+          args: [
+            getContractAddress("SwapERC20Extension")!,
+            BigInt(data.details.A_counterAmount),
+          ],
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, [state, data]);
+
+  useWaitForTransaction({
+    hash: hash!,
+    enabled: hash !== undefined && state === "watch-approve-tx",
+    onSuccess: () => {
+      if (state === "watch-approve-tx") {
+        setState("pre-complete-escrow");
+      }
+    },
+    onError(error) {
+      console.log(error);
+      setError(error.message);
+      setState("none");
+    },
+  });
+
+  const { writeAsync: completeEscrow } = useContractWrite({
+    address: getContractAddress("Escrow"),
+    abi: EscrowABI,
+    functionName: "completeEscrow",
+    onSettled: (data, error) => {
+      if (error) {
+        console.error(error);
+        setError(error.message);
+        setState("none");
+        return;
+      }
+
+      if (data) {
+        setState("watch-complete-tx");
+        setHash(data.hash);
+      }
+    },
+  });
+
+  useWaitForTransaction({
+    hash: hash!,
+    enabled: hash !== undefined && state === "watch-complete-tx",
+    onSuccess: () => {
+      if (state === "watch-complete-tx") {
+        setState("none");
+      }
+    },
+    onError(error) {
+      console.log(error);
+      setError(error.message);
+      setState("none");
+    },
+  });
+
+  useEffect(() => {
+    if (state !== "pre-complete-escrow" || data === undefined) {
+      return;
+    }
+    if (state === "pre-complete-escrow") {
+      setState("complete-escrow");
+
+      try {
+        void completeEscrow({
+          args: [
+            BigInt(data.details.A_escrowId),
+            encodeAbiParameters([{ type: "uint256" }], [BigInt(1)]),
+          ],
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, [state, data]);
+
+  useEffect(() => {
+    if (!data?.details) {
+      return;
+    }
+
+    if (state === "read-allowance") {
+      if (
+        counterAllowance &&
+        counterAllowance >= BigInt(data.details.A_counterAmount)
+      ) {
+        setState("pre-complete-escrow");
+      } else {
+        setState("pre-approve");
+      }
+    }
+  }, [state]);
+
+  console.log({ state, counterAllowance });
 
   return (
     <div>
@@ -164,7 +321,7 @@ const PurchaseEscrowPage: FC = () => {
                   <Button
                     onClick={() => {
                       if (state === "none") {
-                        setState("pre-approve");
+                        setState("pre-read-allowance");
                       }
                     }}
                   >
@@ -186,6 +343,13 @@ const PurchaseEscrowPage: FC = () => {
               </div>
             )}
           </CardContent>
+        )}
+        {error && (
+          <CardFooter className="max-w-full break-words break-all">
+            <div className="hyphens-auto text-red-400">
+              {error?.split("\n").slice(-2)?.[0] ?? error}
+            </div>
+          </CardFooter>
         )}
       </Card>
     </div>
