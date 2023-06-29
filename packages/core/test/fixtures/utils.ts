@@ -34,5 +34,5 @@ export enum EscrowState {
 
 export enum ExchangeType {
   ERC20,
-  ERC720,
+  ERC721,
 }

@@ -28,7 +28,7 @@ contract MultiSwapExtension is
 
     enum ExchangeType {
         ERC20,
-        ERC720
+        ERC721
     }
 
     struct SwapStruct {
