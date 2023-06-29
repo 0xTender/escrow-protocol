@@ -39,8 +39,6 @@ export const CreateSwapERC20Extension: FC = () => {
               className="space-y-8"
               onSubmit={(e) => {
                 void form.handleSubmit((data) => {
-                  console.log(data);
-
                   if (activeStep === 5) {
                     setSwapData(data);
                     initSwap();

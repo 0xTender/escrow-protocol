@@ -1,5 +1,5 @@
 import { ExchangeNames, type ExchangeType } from "@app/types";
-import { useState, type FC } from "react";
+import { useState, type FC, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { z } from "zod";
 import {
@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import { MultiSwapStepper } from "./MultiSwapStepper";
 import { useAllowance } from "@app/hooks/useAllowance";
+import { useBeginEscrow } from "@app/hooks/useBeginEscrow";
 
 export const multiSwapFormSchema = z.object({
   counterParty: z.custom<AddressType>(...zAddr),
@@ -51,13 +52,26 @@ export const MultiSwapForm: FC<{
   const { init, state: allowanceState } = useAllowance({
     allowanceType: initiatorExchange,
     amount: form.watch("initiatorAmount") ?? "0",
-    spenderAddress: getContractAddress("SwapERC20Extension") ?? "0x",
+    spenderAddress: getContractAddress("MultiSwapExtension") ?? "0x",
     tokenAddress: form.watch("initiatorToken") ?? "0x",
     setError: (error) => {
       setError(error);
     },
   });
-  console.log(allowanceState);
+
+  const { beginEscrow, state: beginEscrowState } = useBeginEscrow({
+    setError,
+    data: form.watch(),
+  });
+  console.log({ allowanceState, beginEscrowState });
+  useEffect(() => {
+    if (
+      allowanceState === "complete" &&
+      (beginEscrowState === "none" || beginEscrowState === undefined)
+    ) {
+      beginEscrow();
+    }
+  }, [allowanceState, beginEscrow, beginEscrowState]);
 
   return (
     <>
@@ -79,11 +93,16 @@ export const MultiSwapForm: FC<{
             <form
               className="space-y-8"
               onSubmit={(e) => {
-                void form.handleSubmit((data) => {
-                  console.log(data);
+                void form.handleSubmit(() => {
                   if (allowanceState !== "none") {
                     setError("");
                     init();
+                  }
+                  if (
+                    allowanceState === "complete" &&
+                    beginEscrowState === "error"
+                  ) {
+                    beginEscrow();
                   }
                 })(e);
               }}

@@ -17,7 +17,6 @@ export const getContractAddress: (
   const returnAddress = z
     .custom<AddressType>()
     .parse(addresses[parsedChainId][name]);
-  console.log({ returnAddress, name, addresses, parsedChainId });
   return returnAddress;
 };
 

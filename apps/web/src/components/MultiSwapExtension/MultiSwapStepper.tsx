@@ -135,7 +135,17 @@ export const MultiSwapStepper: FC<{
       {activeStep === 3 && (
         <>
           <Deadline setActiveStep={setActiveStep}></Deadline>
-          <Button type="submit">Submit</Button>
+          <div className="flex gap-2">
+            <Button
+              tabIndex={-1}
+              onClick={() => {
+                setActiveStep((s) => s - 1);
+              }}
+            >
+              Prev
+            </Button>
+            <Button type="submit">Submit</Button>
+          </div>
         </>
       )}
     </>
