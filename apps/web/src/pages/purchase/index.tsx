@@ -24,13 +24,8 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { AgreementStatus } from "@app/types";
 import { Badge } from "@app/components/ui/badge";
-import { millisecondsToStr, secondsToString } from "@app/utils/date";
-import { Button } from "@app/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleTrigger,
-} from "@app/components/ui/collapsible";
-import { CollapsibleContent } from "@radix-ui/react-collapsible";
+import { secondsToString } from "@app/utils/date";
+
 import Link from "next/link";
 
 const getColor = (status: string) => {
@@ -62,7 +57,7 @@ export const columns: ColumnDef<
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row, getValue }) => {
+    cell: ({ row }) => {
       const status: string = row.getValue("status");
       return (
         <Link href={"/purchase/" + row.getValue("A_escrowId")}>

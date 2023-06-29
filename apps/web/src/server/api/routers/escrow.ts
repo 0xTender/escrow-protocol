@@ -143,23 +143,24 @@ export const escrowRouter = createTRPCRouter({
       });
 
       if (extensionName?.name === "SwapERC20Extension") {
-        return await prisma.e_SwapStateChanged_SwapERC20Extension.findFirstOrThrow(
-          {
-            where: {
-              A_escrowId: input.escrowId,
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
-          }
-        );
+        return {
+          details:
+            await prisma.e_SwapStateChanged_SwapERC20Extension.findFirstOrThrow(
+              {
+                where: {
+                  A_escrowId: input.escrowId,
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+              }
+            ),
+        };
       } else {
         throw new TRPCError({
           code: "METHOD_NOT_SUPPORTED",
           message: "Extension is not supported or not found",
         });
       }
-
-      return {};
     }),
 });

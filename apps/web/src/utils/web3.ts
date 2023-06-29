@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export type AddressType = `0x${string}`;
 
-export function shortenAddress(address: AddressType) {
+export function shortenAddress(address: string | AddressType) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 

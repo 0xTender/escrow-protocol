@@ -189,9 +189,9 @@ export const useSwapERC20 = () => {
               address!,
               data.counterParty,
               data.initiatorToken,
-              data.initiatorAmount,
+              parseEther(data.initiatorAmount),
               data.counterToken,
-              data.counterAmount,
+              parseEther(data.counterAmount),
               Math.floor(data.deadline.getTime() / 1000),
             ]
           ),
