@@ -24,3 +24,15 @@ export async function setupUser<T extends { [contractName: string]: Contract }>(
 }
 
 export type PromiseType<T> = T extends Promise<infer U> ? U : T;
+
+export enum EscrowState {
+  NONE,
+  BEGUN,
+  COMPLETED,
+  CANCELLED,
+}
+
+export enum ExchangeType {
+  ERC20,
+  ERC720,
+}

@@ -2,14 +2,8 @@ import { ethers } from "hardhat";
 import { escrow_fixture } from "../fixtures/escrow.fixture";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 
-import { PromiseType } from "../fixtures/utils";
+import { EscrowState, PromiseType } from "../fixtures/utils";
 import { expect } from "chai";
-enum EscrowState {
-  NONE,
-  BEGUN,
-  COMPLETED,
-  CANCELLED,
-}
 
 describe("Escrow Test", () => {
   type Fixture = PromiseType<ReturnType<typeof escrow_fixture>>;
