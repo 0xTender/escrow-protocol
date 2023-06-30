@@ -1,12 +1,6 @@
-# Candy
+# Escrow-Protocol
 
 Steps to run
-
-Run if required:
-
-```sh
-docker volume create chain-data
-```
 
 Update the env:
 
