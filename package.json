@@ -8,6 +8,8 @@
     "start:container": "dotenv -- docker-compose up -d",
     "wait-for-port": "dotenv -- pnpm --filter core run wait-for-port",
     "deploy-local:contracts": "dotenv -- pnpm --filter core run deploy-local:contracts",
+    "deploy-gobi:contracts": "dotenv -- pnpm --filter core run deploy-gobi:contracts",
+    "generate-exports": "dotenv -- pnpm --filter core run generate-exports",
     "heisenberg": "dotenv -- pnpm --filter frontend run heisenberg",
     "db:push": "dotenv -- pnpm --filter frontend run db:push",
     "start:worker": "dotenv -- pnpm --filter frontend run start:worker",
