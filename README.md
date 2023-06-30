@@ -39,6 +39,11 @@ pnpm run dev
 
 # Screenshots
 
+<img width="1436" alt="Screenshot 2023-06-30 at 7 56 59 AM" src="https://github.com/0xTender/escrow-protocol/assets/24915107/c696d23d-3559-4cd8-8d29-e7d557ebc442">
+<img width="1436" alt="Screenshot 2023-06-30 at 7 58 34 AM" src="https://github.com/0xTender/escrow-protocol/assets/24915107/635630df-aa1e-4ba1-88c0-91a8c0268d3c">
+<img width="961" alt="Screenshot 2023-06-29 at 8 58 47 AM" src="https://github.com/0xTender/escrow-protocol/assets/24915107/005648ea-569a-4d39-bd6b-db044d6a1ca8">
+<img width="1436" alt="Screenshot 2023-06-30 at 7 57 34 AM" src="https://github.com/0xTender/escrow-protocol/assets/24915107/5bd0b063-2011-41f6-b046-d09e79a3feae">
+
 # About the Project
 
 The highly scalable escrow contract is designed to facilitate secure and efficient exchanges of ERC20 and ERC721 tokens between users on the Ethereum blockchain. The contract provides a trusted intermediary service, ensuring that transactions are executed reliably and transparently.
@@ -92,6 +97,8 @@ You can reset your local deployments with (destructive action):
 ## Sources
 
 ### Design Inspirations
+
+Loosely based on:
 
 - https://dribbble.com/shots/18261148-Escrow-mobile-design-dashboard-product-design
 - https://dribbble.com/shots/18524987-Escrow-Mobile-Dashboard-Dark-mode
