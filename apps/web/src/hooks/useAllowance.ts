@@ -17,14 +17,15 @@ export const useAllowance = ({
   spenderAddress,
   amount,
   setError,
+  enabled = true,
 }: {
   tokenAddress: AddressType;
   allowanceType: "ERC20" | "ERC721" | ExchangeType;
   spenderAddress: AddressType;
   amount: string;
   setError: (data: string) => void;
+  enabled?: boolean;
 }) => {
-  console.log({ allowanceType, tokenAddress, spenderAddress, amount });
   const [hash, setHash] = useState<AddressType>();
 
   const { address } = useAccount();
@@ -120,6 +121,7 @@ export const useAllowance = ({
   });
 
   useEffect(() => {
+    if (!enabled) return;
     if (state === "none" || state === "pre-read-allowance") {
       return;
     }
@@ -155,7 +157,7 @@ export const useAllowance = ({
       setState("approve");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state, enabled]);
 
   return {
     init: () => setState("pre-read-allowance"),

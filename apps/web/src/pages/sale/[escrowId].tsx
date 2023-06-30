@@ -11,23 +11,19 @@ import {
 } from "@app/components/ui/card";
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
-import {
-  type AddressType,
-  getContractAddress,
-  shortenAddress,
-} from "@app/utils/web3";
+import { type AddressType, getContractAddress } from "@app/utils/web3";
 import { EscrowABI } from "@root/core";
-import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect, useState } from "react";
-import { encodeAbiParameters, formatEther } from "viem";
+import { encodeAbiParameters } from "viem";
 import {
   useAccount,
   useContractRead,
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
+import { EscrowDetailsCard } from "../../components/EscrowDetailsCard";
 
 type StateMachine =
   | "pre-read-allowance"
@@ -190,51 +186,7 @@ const PurchaseEscrowPage: FC = () => {
         </CardHeader>
         {data?.details && (
           <CardContent className="grid gap-2 md:grid-cols-2">
-            <div className="flex items-center space-x-2">
-              <div>
-                Initiator:{" "}
-                <span className="text-slate-500 dark:text-slate-400">You</span>
-              </div>
-
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Counter:{" "}
-              <span className="text-slate-500 dark:text-slate-400">
-                {shortenAddress(data.details.A_initiator)}{" "}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div>
-                Token Offered:{" "}
-                <span className="text-slate-500 dark:text-slate-400">
-                  {shortenAddress(data.details.A_initiatorToken)}{" "}
-                </span>
-              </div>
-
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Token Amount Offered:{" "}
-              <span className="text-slate-500 dark:text-slate-400">
-                {formatEther(BigInt(data.details.A_initiatorAmount)).toString()}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div>
-                Token Requested:{" "}
-                <span className="text-slate-500 dark:text-slate-400">
-                  {shortenAddress(data.details.A_counterToken)}{" "}
-                </span>
-              </div>
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Token Amount Requested:{" "}
-              <span className="text-slate-500 dark:text-slate-400">
-                {formatEther(BigInt(data.details.A_counterAmount)).toString()}
-              </span>
-            </div>
+            <EscrowDetailsCard data={data} />
 
             {escrowState && (
               <div className="flex gap-2">

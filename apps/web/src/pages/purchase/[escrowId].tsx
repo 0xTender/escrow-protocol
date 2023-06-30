@@ -11,13 +11,8 @@ import {
 import { EscrowState, getValueForEscrowState } from "@app/types";
 import { api } from "@app/utils/api";
 import { ERC20ABI } from "@app/utils/interfaces/IERC20ABI";
-import {
-  type AddressType,
-  getContractAddress,
-  shortenAddress,
-} from "@app/utils/web3";
+import { type AddressType, getContractAddress } from "@app/utils/web3";
 import { EscrowABI } from "@root/core";
-import { ExternalLink } from "lucide-react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect, useState } from "react";
@@ -28,6 +23,8 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
+import { EscrowDetailsCard } from "@app/components/EscrowDetailsCard";
+import { useAllowance } from "@app/hooks/useAllowance";
 
 type StateMachine =
   | "pre-read-allowance"
@@ -44,7 +41,9 @@ type StateMachine =
   //
   | "pre-cancel"
   | "cancel"
-  | "watch-cancel-tx";
+  | "watch-cancel-tx"
+  // multi
+  | "multi";
 
 const getColor = (status: number) => {
   switch (status) {
@@ -247,7 +246,6 @@ const PurchaseEscrowPage: FC = () => {
     }
     if (state === "pre-complete-escrow") {
       setState("complete-escrow");
-
       try {
         void completeEscrow({
           args: [
@@ -299,6 +297,39 @@ const PurchaseEscrowPage: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
+  const { init: initMultiAllowance, state: allowanceState } = useAllowance({
+    tokenAddress: (data?.details.A_counterToken as AddressType) ?? "0x",
+    enabled: data?.extensionName === "MultiSwapExtension",
+    allowanceType:
+      data?.extensionName === "MultiSwapExtension"
+        ? data?.details?.A_counterExchange === "0"
+          ? "ERC20"
+          : "ERC721"
+        : "ERC20",
+    amount:
+      (data?.extensionName === "MultiSwapExtension" &&
+      data?.details?.A_counterExchange === "0"
+        ? formatEther(BigInt(data?.details?.A_counterAmount ?? "0"))
+        : data?.details?.A_counterAmount) ?? "0",
+    spenderAddress: getContractAddress("MultiSwapExtension") ?? "0x",
+    setError: (error) => {
+      setError(error);
+    },
+  });
+
+  useEffect(() => {
+    console.log({ state, allowanceState });
+    if (allowanceState === "complete" && state === "multi") {
+      setState("pre-complete-escrow");
+    }
+  }, [allowanceState, state]);
+
+  useEffect(() => {
+    if (data?.extensionName === "MultiSwapExtension") {
+      setState("multi");
+    }
+  }, [data]);
+
   return (
     <div>
       <Head>
@@ -325,59 +356,25 @@ const PurchaseEscrowPage: FC = () => {
         </CardHeader>
         {data?.details && (
           <CardContent className="grid gap-2 md:grid-cols-2">
-            <div className="flex items-center space-x-2">
-              <div>
-                Initiator:{" "}
-                <span className="text-slate-500 dark:text-slate-400">
-                  {shortenAddress(data.details.A_initiator)}{" "}
-                </span>
-              </div>
-
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Counter:{" "}
-              <span className="text-slate-500 dark:text-slate-400">You</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div>
-                Token Offered:{" "}
-                <span className="text-slate-500 dark:text-slate-400">
-                  {shortenAddress(data.details.A_initiatorToken)}{" "}
-                </span>
-              </div>
-
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Token Amount Offered:{" "}
-              <span className="text-slate-500 dark:text-slate-400">
-                {formatEther(BigInt(data.details.A_initiatorAmount)).toString()}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div>
-                Token Requested:{" "}
-                <span className="text-slate-500 dark:text-slate-400">
-                  {shortenAddress(data.details.A_counterToken)}{" "}
-                </span>
-              </div>
-              <ExternalLink className="h-4 cursor-pointer" />
-            </div>
-            <div>
-              Token Amount Requested:{" "}
-              <span className="text-slate-500 dark:text-slate-400">
-                {formatEther(BigInt(data.details.A_counterAmount)).toString()}
-              </span>
-            </div>
+            <EscrowDetailsCard data={data} />
 
             {escrowState && (
               <div className="flex gap-2">
                 {escrowState[0] === EscrowState.BEGUN && (
                   <Button
                     onClick={() => {
-                      if (state === "none") {
+                      if (
+                        state === "none" &&
+                        data.extensionName === "SwapERC20Extension"
+                      ) {
                         setState("pre-read-allowance");
+                      }
+
+                      if (
+                        state === "none" &&
+                        data.extensionName === "MultiSwapExtension"
+                      ) {
+                        initMultiAllowance();
                       }
                     }}
                   >

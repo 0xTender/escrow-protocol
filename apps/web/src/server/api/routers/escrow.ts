@@ -3,6 +3,10 @@ import { createTRPCRouter, publicProcedure } from "@app/server/api/trpc";
 import { type AddressType, isAddr } from "@app/utils/web3";
 import { EscrowState, AgreementStatus } from "@app/types";
 import { TRPCError } from "@trpc/server";
+import {
+  type E_SwapStateChanged_MultiSwapExtension,
+  type E_SwapStateChanged_SwapERC20Extension,
+} from "@prisma/client";
 
 export const escrowRouter = createTRPCRouter({
   salesAndPurchases: publicProcedure
@@ -26,7 +30,7 @@ export const escrowRouter = createTRPCRouter({
             A_escrowState: `${EscrowState.BEGUN}`,
           },
         }),
-        (await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.count({
+        (await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.count({
           where: {
             A_counter: input.address,
             A_state: `${EscrowState.BEGUN}`,
@@ -265,23 +269,19 @@ export const escrowRouter = createTRPCRouter({
         },
       });
 
-      if (extensionName?.name === "SwapERC20Extension") {
-        return {
-          extensionName: "SwapERC20Extension",
-          details:
-            await prisma.e_SwapStateChanged_SwapERC20Extension.findFirstOrThrow(
-              {
-                where: {
-                  A_escrowId: input.escrowId,
-                },
-                orderBy: {
-                  createdAt: "desc",
-                },
-              }
-            ),
-        };
-      } else if (extensionName?.name === "MultiSwapExtension") {
-        return {
+      let returnData:
+        | {
+            extensionName: "MultiSwapExtension";
+            details: E_SwapStateChanged_MultiSwapExtension;
+          }
+        | {
+            extensionName: "SwapERC20Extension";
+            details: E_SwapStateChanged_SwapERC20Extension;
+          }
+        | undefined;
+
+      if (extensionName?.name === "MultiSwapExtension") {
+        returnData = {
           extensionName: "MultiSwapExtension",
           details:
             await prisma.e_SwapStateChanged_MultiSwapExtension.findFirstOrThrow(
@@ -295,7 +295,29 @@ export const escrowRouter = createTRPCRouter({
               }
             ),
         };
-      } else {
+      }
+
+      if (extensionName?.name === "SwapERC20Extension") {
+        returnData = {
+          extensionName: "SwapERC20Extension",
+          details:
+            await prisma.e_SwapStateChanged_SwapERC20Extension.findFirstOrThrow(
+              {
+                where: {
+                  A_escrowId: input.escrowId,
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+              }
+            ),
+        };
+      }
+      if (returnData !== undefined) {
+        return returnData;
+      }
+
+      {
         throw new TRPCError({
           code: "METHOD_NOT_SUPPORTED",
           message: "Extension is not supported or not found",
