@@ -10,7 +10,8 @@
     "commit-hook": "npm run deploy && npm run test",
     "deploy-local:contracts": "hardhat deploy --network localhost",
     "deploy-gobi:contracts": "hardhat deploy --network gobi",
-    "wait-for-port": "echo 'Waiting for port' && wait-port 8545 && wait-port 3306 && tsx wait.ts"
+    "wait-for-port": "echo 'Waiting for port' && wait-port 8545 && wait-port 3306 && tsx wait.ts",
+    "generate-exports": "npx tsx generate-exports.ts && pnpm build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
