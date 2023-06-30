@@ -7,6 +7,7 @@ import {
 import { ExternalLink } from "lucide-react";
 import { type FC } from "react";
 import { formatEther } from "viem";
+import { useAccount } from "wagmi";
 
 export const EscrowDetailsCard: FC<{
   data:
@@ -18,13 +19,19 @@ export const EscrowDetailsCard: FC<{
         extensionName: "SwapERC20Extension";
         details: E_SwapStateChanged_SwapERC20Extension;
       };
-}> = ({ data }) => {
+  pageType: "purchase" | "sale";
+}> = ({ data, pageType }) => {
+  const { address } = useAccount();
   return (
     <>
       <div className="flex items-center space-x-2">
         <div>
           Initiator:{" "}
-          <span className="text-slate-500 dark:text-slate-400">You</span>
+          <span className="text-slate-500 dark:text-slate-400">
+            {pageType === "sale" && address === data.details.A_initiator
+              ? "You"
+              : shortenAddress(data.details.A_initiator)}
+          </span>
         </div>
 
         <ExternalLink className="h-4 cursor-pointer" />
@@ -32,7 +39,9 @@ export const EscrowDetailsCard: FC<{
       <div>
         Counter:{" "}
         <span className="text-slate-500 dark:text-slate-400">
-          {shortenAddress(data.details.A_initiator)}{" "}
+          {pageType === "purchase" && address === data.details.A_counter
+            ? "You"
+            : shortenAddress(data.details.A_counter)}
         </span>
       </div>
       <div className="flex items-center space-x-2">

@@ -324,11 +324,14 @@ const PurchaseEscrowPage: FC = () => {
     }
   }, [allowanceState, state]);
 
+  const [counter, setCounter] = useState(0);
+
   useEffect(() => {
-    if (data?.extensionName === "MultiSwapExtension") {
+    if (data?.extensionName === "MultiSwapExtension" && counter === 0) {
       setState("multi");
+      setCounter(1);
     }
-  }, [data]);
+  }, [data, counter]);
 
   return (
     <div>
@@ -356,7 +359,7 @@ const PurchaseEscrowPage: FC = () => {
         </CardHeader>
         {data?.details && (
           <CardContent className="grid gap-2 md:grid-cols-2">
-            <EscrowDetailsCard data={data} />
+            <EscrowDetailsCard pageType="purchase" data={data} />
 
             {escrowState && (
               <div className="flex gap-2">
@@ -371,7 +374,7 @@ const PurchaseEscrowPage: FC = () => {
                       }
 
                       if (
-                        state === "none" &&
+                        state === "multi" &&
                         data.extensionName === "MultiSwapExtension"
                       ) {
                         initMultiAllowance();

@@ -186,7 +186,7 @@ const PurchaseEscrowPage: FC = () => {
         </CardHeader>
         {data?.details && (
           <CardContent className="grid gap-2 md:grid-cols-2">
-            <EscrowDetailsCard data={data} />
+            <EscrowDetailsCard pageType="sale" data={data} />
 
             {escrowState && (
               <div className="flex gap-2">
