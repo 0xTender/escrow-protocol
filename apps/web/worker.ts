@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import { MigrationEventTypes, MigrationListener } from "@0xtender/evm-helpers";
 import { existsSync } from "fs";
 import { join } from "path";
