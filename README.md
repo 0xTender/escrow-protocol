@@ -8,6 +8,7 @@
 # Escrow-Protocol
 
 [Deployments](https://github.com/0xTender/escrow-protocol/blob/master/contracts-gobi.json)
+Also checkout [on chain contracts](https://github.com/0xTender/escrow-protocol/tree/develop-chain-gobi)
 
 The project uses a plugin system based escrow contract that allows high scalability with escrow protocol.
 
