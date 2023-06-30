@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "heisenberg:migration": "npx 0xtender-heisenberg generate-migration -o migration.ts ../../contracts.json",
-    "heisenberg:schema": "npx 0xtender-heisenberg generate -o prisma/schema.prisma -i prisma/input.prisma ../../contracts.json && npx prisma format",
+    "heisenberg:migration": "npx 0xtender-heisenberg generate-migration -o migration.ts ../../contracts-gobi.json",
+    "heisenberg:schema": "npx 0xtender-heisenberg generate -o prisma/schema.prisma -i prisma/input.prisma ../../contracts-gobi.json && npx prisma format",
     "heisenberg": "npm run heisenberg:migration && npm run heisenberg:schema",
     "db:push": "prisma db push",
     "dev": "next dev",

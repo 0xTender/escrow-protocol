@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Escrow",
+    "path": "./packages/core/deployments/gobi/Escrow.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  },
+  {
+    "name": "SwapERC20Extension",
+    "path": "./packages/core/deployments/gobi/SwapERC20Extension.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  },
+  {
+    "name": "Tether",
+    "path": "./packages/core/deployments/gobi/Tether.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  },
+  {
+    "name": "WrappedEther",
+    "path": "./packages/core/deployments/gobi/WrappedEther.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  },
+  {
+    "name": "TestNFT",
+    "path": "./packages/core/deployments/gobi/TestNFT.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  },
+  {
+    "name": "MultiSwapExtension",
+    "path": "./packages/core/deployments/gobi/MultiSwapExtension.json",
+    "rpc": "https://gobi-testnet.horizenlabs.io/ethv1"
+  }
+]

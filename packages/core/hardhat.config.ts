@@ -35,6 +35,13 @@ const config: HardhatUserConfig = {
           },
         }
       : {}),
+    gobi: {
+      url: "https://gobi-testnet.horizenlabs.io/ethv1",
+      chainId: 1663,
+      // accounts: {
+      //   mnemonic: process.env.MNEMONIC,
+      // },
+    },
   },
   namedAccounts: {
     deployer: {

@@ -7,7 +7,26 @@ export const addresses = {
     Tether: "0xa1dc1f9004d25AeC19B8f08C638F95e383282F06",
     WrappedEther: "0xE8b6Cb6d1CdC0718c47aA323D544a91fe987E91e",
   },
-};
+  "1663": {
+    Escrow: "0x7c60eD34D3d00B8D87Bcc4b889e298cD2721cfd0",
+    MultiSwapExtension: "0x1f49f78350A0377269b1D0488ee72188B72E4447",
+    SwapERC20Extension: "0x16701fE6A80D7752eb7754961e4fB49597083d90",
+    TestNFT: "0xaf8d0C1717928779c4B03a2Df0b7D5b3ba426e9e",
+    Tether: "0xa1dc1f9004d25AeC19B8f08C638F95e383282F06",
+    WrappedEther: "0xE8b6Cb6d1CdC0718c47aA323D544a91fe987E91e",
+  },
+} as Record<
+  "1337" | "1663",
+  Record<
+    | "Escrow"
+    | "MultiSwapExtension"
+    | "SwapERC20Extension"
+    | "TestNFT"
+    | "Tether"
+    | "WrappedEther",
+    string
+  >
+>;
 
 export const EscrowABI = [
   {

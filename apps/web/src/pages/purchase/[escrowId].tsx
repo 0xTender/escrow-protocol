@@ -98,6 +98,8 @@ const PurchaseEscrowPage: FC = () => {
     enabled: !!data?.details.A_escrowId,
   });
 
+  console.log(escrowState);
+
   const [hash, setHash] = useState<AddressType>();
 
   const { data: counterAllowance } = useContractRead({
