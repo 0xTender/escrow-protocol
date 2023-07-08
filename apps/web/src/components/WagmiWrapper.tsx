@@ -9,7 +9,7 @@ import { useState, useEffect, useContext } from "react";
 
 import { Moon, Sun } from "lucide-react";
 import {
-  Chain,
+  type Chain,
   configureChains,
   createConfig,
   useAccount,

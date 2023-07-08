@@ -1,6 +1,9 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
+import { ethers } from "hardhat";
+import type { Escrow } from "../typechain-types";
+
 const deploy_function: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
@@ -19,15 +22,21 @@ const deploy_function: DeployFunction = async function (
     args: [Escrow.address],
   });
 
-  // const SwapERC20Extension = await deployments.get("SwapERC20Extension");
+  const SwapERC20Extension = await deployments.get("SwapERC20Extension");
 
-  // await execute(
-  //   "Escrow",
-  //   { from: deployer },
-  //   "updateEscrowExtension",
-  //   SwapERC20Extension.address,
-  //   true
-  // );
+  const EscrowInstance = await ethers.getContract<Escrow>("Escrow");
+
+  if (
+    (await EscrowInstance.escrowExtensions(SwapERC20Extension.address)) !== true
+  ) {
+    await execute(
+      "Escrow",
+      { from: deployer },
+      "updateEscrowExtension",
+      SwapERC20Extension.address,
+      true
+    );
+  }
 };
 
 export default deploy_function;
