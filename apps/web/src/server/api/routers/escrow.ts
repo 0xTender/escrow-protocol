@@ -8,6 +8,14 @@ import {
   type E_SwapStateChanged_SwapERC20Extension,
 } from "@prisma/client";
 
+const getUniqueByKey = <T>(instances: T[], key: keyof T) => {
+  const arrayUniqueByKey = [
+    ...new Map(instances.map((item) => [item[key], item])).values(),
+  ];
+
+  return arrayUniqueByKey;
+};
+
 export const escrowRouter = createTRPCRouter({
   salesAndPurchases: publicProcedure
     .input(
@@ -24,24 +32,33 @@ export const escrowRouter = createTRPCRouter({
       }
 
       const instances = await Promise.all([
-        ctx.prisma.e_EscrowStateUpdate_Escrow.count({
-          where: {
-            A_sender: input.address,
-            A_escrowState: `${EscrowState.BEGUN}`,
-          },
-        }),
-        (await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.count({
-          where: {
-            A_counter: input.address,
-            A_state: `${EscrowState.BEGUN}`,
-          },
-        })) +
-          (await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.count({
+        (
+          await ctx.prisma.e_EscrowStateUpdate_Escrow.findMany({
+            distinct: ["A_escrowId"],
+            where: {
+              A_sender: input.address,
+              A_escrowState: `${EscrowState.BEGUN}`,
+            },
+          })
+        ).length,
+        (
+          await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.findMany({
+            distinct: ["A_escrowId"],
             where: {
               A_counter: input.address,
               A_state: `${EscrowState.BEGUN}`,
             },
-          })),
+          })
+        ).length +
+          (
+            await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.findMany({
+              distinct: "A_escrowId",
+              where: {
+                A_counter: input.address,
+                A_state: `${EscrowState.BEGUN}`,
+              },
+            })
+          ).length,
       ]);
 
       return instances;
@@ -60,7 +77,7 @@ export const escrowRouter = createTRPCRouter({
       if (input.address === undefined) {
         return { instances: [] };
       }
-      const swapERC20 =
+      const swapERC20 = getUniqueByKey(
         await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.findMany({
           where: {
             A_counter: input.address,
@@ -69,9 +86,11 @@ export const escrowRouter = createTRPCRouter({
           orderBy: {
             createdAt: "desc",
           },
-        });
+        }),
+        "A_escrowId"
+      );
 
-      const multiSwap =
+      const multiSwap = getUniqueByKey(
         await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.findMany({
           where: {
             A_counter: input.address,
@@ -80,7 +99,9 @@ export const escrowRouter = createTRPCRouter({
           orderBy: {
             createdAt: "desc",
           },
-        });
+        }),
+        "A_escrowId"
+      );
 
       const tokenAddresses = Array.from(
         new Set(
@@ -159,7 +180,7 @@ export const escrowRouter = createTRPCRouter({
       if (input.address === undefined) {
         return { instances: [] };
       }
-      const swapERC20 =
+      const swapERC20 = getUniqueByKey(
         await ctx.prisma.e_SwapStateChanged_SwapERC20Extension.findMany({
           where: {
             A_initiator: input.address,
@@ -168,8 +189,11 @@ export const escrowRouter = createTRPCRouter({
           orderBy: {
             createdAt: "desc",
           },
-        });
-      const multiSwap =
+        }),
+        "A_escrowId"
+      );
+
+      const multiSwap = getUniqueByKey(
         await ctx.prisma.e_SwapStateChanged_MultiSwapExtension.findMany({
           where: {
             A_initiator: input.address,
@@ -178,7 +202,9 @@ export const escrowRouter = createTRPCRouter({
           orderBy: {
             createdAt: "desc",
           },
-        });
+        }),
+        "A_escrowId"
+      );
 
       const tokenAddresses = Array.from(
         new Set(
