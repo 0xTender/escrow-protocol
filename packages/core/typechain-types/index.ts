@@ -66,3 +66,5 @@ export type { MultiSwapExtension } from "./contracts/MultiSwapExtension";
 export { MultiSwapExtension__factory } from "./factories/contracts/MultiSwapExtension__factory";
 export type { SwapERC20Extension } from "./contracts/SwapERC20Extension";
 export { SwapERC20Extension__factory } from "./factories/contracts/SwapERC20Extension__factory";
+export type { SwapWithDispute } from "./contracts/SwapWithDispute";
+export { SwapWithDispute__factory } from "./factories/contracts/SwapWithDispute__factory";

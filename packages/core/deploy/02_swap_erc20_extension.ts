@@ -19,15 +19,15 @@ const deploy_function: DeployFunction = async function (
     args: [Escrow.address],
   });
 
-  const SwapERC20Extension = await deployments.get("SwapERC20Extension");
+  // const SwapERC20Extension = await deployments.get("SwapERC20Extension");
 
-  await execute(
-    "Escrow",
-    { from: deployer },
-    "updateEscrowExtension",
-    SwapERC20Extension.address,
-    true
-  );
+  // await execute(
+  //   "Escrow",
+  //   { from: deployer },
+  //   "updateEscrowExtension",
+  //   SwapERC20Extension.address,
+  //   true
+  // );
 };
 
 export default deploy_function;

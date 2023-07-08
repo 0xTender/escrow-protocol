@@ -19,15 +19,15 @@ const deploy_function: DeployFunction = async function (
     args: [Escrow.address],
   });
 
-  const MultiSwapExtension = await deployments.get("MultiSwapExtension");
+  // const MultiSwapExtension = await deployments.get("MultiSwapExtension");
 
-  await execute(
-    "Escrow",
-    { from: deployer },
-    "updateEscrowExtension",
-    MultiSwapExtension.address,
-    true
-  );
+  // await execute(
+  //   "Escrow",
+  //   { from: deployer },
+  //   "updateEscrowExtension",
+  //   MultiSwapExtension.address,
+  //   true
+  // );
 };
 
 export default deploy_function;
