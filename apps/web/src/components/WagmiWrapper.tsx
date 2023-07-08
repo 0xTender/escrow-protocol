@@ -93,6 +93,14 @@ export const WagmiWrapper: FCC = ({ children }) => {
   return (
     <>
       <main className={cn("min-h-screen px-6 py-6 md:px-12")}>
+        {hydrated === false && (
+          <Head>
+            <title>Escrow Protocol - 0xTender</title>
+            <meta name="description" content="Escrow Protocol - 0xTender" />
+            <link rel="icon" href="/logo.png" />
+          </Head>
+        )}
+
         {hydrated && (
           <>
             <div className={"mb-10 flex items-center justify-between"}>
@@ -131,17 +139,15 @@ export const WagmiWrapper: FCC = ({ children }) => {
               </div>
             </div>
 
+            {!address && (
+              <Head>
+                <title>Escrow Protocol - 0xTender</title>
+                <meta name="description" content="Escrow Protocol - 0xTender" />
+                <link rel="icon" href="/logo.png" />
+              </Head>
+            )}
+
             <>
-              {!address && (
-                <Head>
-                  <title>Escrow Protocol - 0xTender</title>
-                  <meta
-                    name="description"
-                    content="Escrow Protocol - 0xTender"
-                  />
-                  <link rel="icon" href="/logo.png" />
-                </Head>
-              )}
               {address && (
                 <>
                   <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
