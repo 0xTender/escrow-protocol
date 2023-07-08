@@ -23,6 +23,7 @@ import { cn } from "@app/utils";
 import type { FCC } from "@app/utils";
 import { ThemeContext } from "@app/hooks/useTheme";
 import Link from "next/link";
+import Head from "next/head";
 
 const projectId = "a3b72b0c49a06b52469c2ea63d289f26";
 
@@ -131,6 +132,16 @@ export const WagmiWrapper: FCC = ({ children }) => {
             </div>
 
             <>
+              {!address && (
+                <Head>
+                  <title>Escrow Protocol - 0xTender</title>
+                  <meta
+                    name="description"
+                    content="Escrow Protocol - 0xTender"
+                  />
+                  <link rel="icon" href="/logo.png" />
+                </Head>
+              )}
               {address && (
                 <>
                   <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
