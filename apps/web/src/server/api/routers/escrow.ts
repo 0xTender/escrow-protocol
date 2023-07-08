@@ -160,8 +160,9 @@ export const escrowRouter = createTRPCRouter({
         instances: instances.map((e) => {
           return {
             ...e,
-            initiatorTokenName: tokens.get(e.A_initiatorToken) ?? "",
-            counterTokenName: tokens.get(e.A_counterToken) ?? "",
+            initiatorTokenName:
+              tokens.get(e.A_initiatorToken) ?? e.A_initiatorToken,
+            counterTokenName: tokens.get(e.A_counterToken) ?? e.A_counterToken,
           };
         }),
       };
@@ -268,8 +269,9 @@ export const escrowRouter = createTRPCRouter({
         instances: instances.map((e) => {
           return {
             ...e,
-            initiatorTokenName: tokens.get(e.A_initiatorToken) ?? "",
-            counterTokenName: tokens.get(e.A_counterToken) ?? "",
+            initiatorTokenName:
+              tokens.get(e.A_initiatorToken) ?? e.A_initiatorToken,
+            counterTokenName: tokens.get(e.A_counterToken) ?? e.A_counterToken,
           };
         }),
       };
