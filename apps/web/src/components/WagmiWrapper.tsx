@@ -8,7 +8,13 @@ import { Web3Modal, useWeb3Modal } from "@web3modal/react";
 import { useState, useEffect, useContext } from "react";
 
 import { Moon, Sun } from "lucide-react";
-import { configureChains, createConfig, useAccount, WagmiConfig } from "wagmi";
+import {
+  Chain,
+  configureChains,
+  createConfig,
+  useAccount,
+  WagmiConfig,
+} from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { localhost } from "viem/chains";
@@ -18,17 +24,37 @@ import type { FCC } from "@app/utils";
 import { ThemeContext } from "@app/hooks/useTheme";
 import Link from "next/link";
 
-const chains = [localhost];
-
 const projectId = "a3b72b0c49a06b52469c2ea63d289f26";
 
+export const gobi = {
+  id: 1663,
+  name: "Gobi",
+  network: "gobi",
+  nativeCurrency: {
+    decimals: 18,
+    name: "tZEN",
+    symbol: "tZEN",
+  },
+  rpcUrls: {
+    public: { http: ["https://gobi-testnet.horizenlabs.io/ethv1"] },
+    default: { http: ["https://gobi-testnet.horizenlabs.io/ethv1"] },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: "GobiExplorer",
+      url: "https://gobi-explorer.horizen.io/",
+    },
+    default: { name: "GobiExplorer", url: "https://snowtrace.io" },
+  },
+} as const satisfies Chain;
+const chains = [localhost, gobi];
+
 const { publicClient } = configureChains(
-  chains,
+  [...chains],
   [
     w3mProvider({ projectId: projectId }),
     alchemyProvider({ apiKey: "UNmYU0zAvct_GRHxQqMsCUFYbThTkhUJ" }),
     infuraProvider({ apiKey: "9ae618979ecd4afb9e6826f76deb4475" }),
-    // publicProvider(),
   ],
   {
     stallTimeout: 5_000,
