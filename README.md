@@ -1,3 +1,19 @@
+For Gobi testnet use:
+
+```console
+git checkout develop-chain-gobi
+```
+
+And this .env:
+```env
+DATABASE_URL=mysql://root:password@localhost:3306/escrow-gobi
+MNEMONIC=<MNEMONIC>
+RPC_1663_CHAIN="https://gobi-testnet.horizenlabs.io/ethv1"
+NEXT_PUBLIC_CHAIN_ID=1663
+```
+
+## Table of Contents
+
 - [Escrow-Protocol](#escrow-protocol)
 - [Screenshots](#screenshots)
 - [About the Project](#about-the-project)
