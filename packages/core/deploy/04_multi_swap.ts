@@ -1,6 +1,9 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
+import { ethers } from "hardhat";
+import type { Escrow } from "../typechain-types";
+
 const deploy_function: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
@@ -20,14 +23,18 @@ const deploy_function: DeployFunction = async function (
   });
 
   const MultiSwapExtension = await deployments.get("MultiSwapExtension");
-
-  await execute(
-    "Escrow",
-    { from: deployer },
-    "updateEscrowExtension",
-    MultiSwapExtension.address,
-    true
-  );
+  const EscrowInstance = await ethers.getContract<Escrow>("Escrow");
+  if (
+    (await EscrowInstance.escrowExtensions(MultiSwapExtension.address)) !== true
+  ) {
+    await execute(
+      "Escrow",
+      { from: deployer },
+      "updateEscrowExtension",
+      MultiSwapExtension.address,
+      true
+    );
+  }
 };
 
 export default deploy_function;

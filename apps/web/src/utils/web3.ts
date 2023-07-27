@@ -13,10 +13,11 @@ export const getContractAddress: (
   name: keyof (typeof addresses)[keyof typeof addresses]
 ) => `0x${string}` = (name) => {
   const chainId: string = env.NEXT_PUBLIC_CHAIN_ID.toString();
-  const parsedChainId = z.enum(["1337"]).parse(chainId);
-  const returnAddress = z
-    .custom<AddressType>()
-    .parse(addresses[parsedChainId][name]);
+  const parsedChainId = z.enum(["1337", "1663"]).parse(chainId);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const chainAddresses = addresses[parsedChainId];
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const returnAddress = z.custom<AddressType>().parse(chainAddresses[name]);
   return returnAddress;
 };
 
